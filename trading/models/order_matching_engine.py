@@ -40,12 +40,18 @@ class OrderMatchingEngine:
             best_buy_order = self.buy_heapq.peek()
             best_sell_order = self.sell_heapq.peek()
 
+            print(best_buy_order)
+            print(best_sell_order)
+
+
             #Update the bid and ask prices
             self.stock_listing.update_bid_price(best_buy_order.price)
             self.stock_listing.update_ask_price(best_sell_order.price)
             
             # Check if the orders can be matched
             if best_buy_order.price >= best_sell_order.price:
+
+                
                 # Match the orders
                 self.complete_transaction(best_sell_order,best_buy_order,best_buy_order.price)
                 
@@ -84,6 +90,7 @@ class OrderMatchingEngine:
 
     #TODO: Don't forget to adjust bid/ask price after transaction
     def complete_transaction(self,sell_order : Order,buy_order : Order,price):
+
         
         sell_order_quantity = sell_order.remaining_quantity
         buy_order_quantity = buy_order.remaining_quantity 
@@ -100,7 +107,8 @@ class OrderMatchingEngine:
         
         #Transfer the shares first
         sellers_shares = sell_order.remove_shares(trade_quantity,price)
-        buy_order.asset.add_shares(sellers_shares,price)
+        
+        buy_order.add_shares(sellers_shares,price)
 
         #Transfer the money value
         money_value = buy_order.remove_money(trade_quantity * price)
@@ -128,7 +136,10 @@ class OrderMatchingEngine:
         #If the order is fully executed, remove it from the heap
         if sell_order.remaining_quantity == 0:
             self.sell_heapq.pop()
+            # print("Sell order fully executed")
+        print(buy_order.remaining_quantity, "BUY RODEER")
         if buy_order.remaining_quantity == 0:
             self.buy_heapq.pop()
+            print("Buy order fully executed")
         
         return transaction

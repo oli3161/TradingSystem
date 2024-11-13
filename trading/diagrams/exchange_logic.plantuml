@@ -1,0 +1,62 @@
+@startuml exchange_logic
+
+class Client{
+    +sendOrder(Order)
+    +orderFilled(Order)
+    +updatePortfolio()
+}
+
+class MarketMaker{
++updateOrderPrice(Order)
+}
+
+
+
+
+class OrderMatchingEngine{
+    +addOrder(Order)
+    +removeOrder(Order)
+    +getTopOrder()
+    -processOrders()
+}
+
+class Assets{
+
+}
+
+class Heaps{
+    
+}
+
+
+
+class PortfolioStock{
+}
+
+class Porfolio{
+
+}
+
+class StockExchange{
+
+}
+
+class StockMarketListing{
+    
+}
+
+
+
+class Order{
+    -client : Client
+    +notifyOrderFilled()
+
+}
+
+
+
+
+
+
+
+@enduml

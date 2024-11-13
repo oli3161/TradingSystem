@@ -29,13 +29,13 @@ class Order :
         self.asset.add_shares(quantity, price)
         
         #Remove quantity processed from order
-        self.remaining_quantity -= quantity
+        self.decrease_quantity_traded(quantity)
 
     def remove_shares(self, quantity, price):
         shares = self.asset.remove_shares(quantity, price)
 
         #Remove quantity processed from order
-        self.remaining_quantity -= quantity
+        self.decrease_quantity_traded(quantity)
 
         return shares
 

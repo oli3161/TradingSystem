@@ -1,14 +1,20 @@
 class PortfolioStock:
 
-    def __init__(self, ticker_symbol, shares_owned, average_purchase_price,
-                  market_price):
+    def __init__(self, ticker_symbol = None, shares_owned = 0, average_purchase_price = 0,
+                  market_price = 0):
+        
         self.ticker_symbol = ticker_symbol
         self.shares_owned = shares_owned
         self.average_purchase_price = average_purchase_price
         self.market_price = market_price
-        self.total_invested = shares_owned * average_purchase_price
-        self.unrealized_gain_loss = (market_price - average_purchase_price) * shares_owned
-    
+
+        if self.shares_owned and self.average_purchase_price and self.market_price:
+            self.total_invested = shares_owned * average_purchase_price
+            self.unrealized_gain_loss = (market_price - average_purchase_price) * shares_owned
+        
+        else:
+            self.total_invested = 0
+            self.unrealized_gain_loss = 0
 
     def add_shares(self,quantity,price):
 
@@ -33,7 +39,5 @@ class PortfolioStock:
     def __str__(self):
         return (f"Ticker: {self.ticker_symbol}, Shares: {self.shares_owned}, "
                 f"Avg Purchase Price: {self.average_purchase_price}, "
-                f"Market Price: {self.market_price}, "
-                f"Total Invested: {self.total_invested}, "
-                f"Unrealized Gain/Loss: {self.unrealized_gain_loss}")
+                )
 
