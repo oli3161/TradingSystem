@@ -1,9 +1,12 @@
 import sys
+
+from ETS.AlgoETS.Simulateur.TradingSystem.TradingSystem.trading.models.order_flow import OrderFlow
 sys.path.append('C:/Users/ogigu/OneDrive/Documents/Ecole/Algo/TradingSystem/trading')  # Adjust to the actual path of the 'trading' folder
 
 import unittest
 from unittest.mock import Mock
 from models import *
+
 
 class TestClient(unittest.TestCase):
 
@@ -34,6 +37,13 @@ class TestClient(unittest.TestCase):
         self.client.market_maker = market_maker_mock
         self.client.submit_order(self.order,self.stock_exchange)
         market_maker_mock.process_order.assert_called_once_with(self.order)
+
+    def test_order_flow(self):
+        order_flow=OrderFlow(self.client)
+        order_flow.submit_order_ntimes(self.order,self.stock_exchange,10)
+        
+
+
 
 if __name__ == '__main__':
     unittest.main()
