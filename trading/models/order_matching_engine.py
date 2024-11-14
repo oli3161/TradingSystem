@@ -1,8 +1,9 @@
 from .heaps import MinOrderHeap, MaxOrderHeap
 from .order import Order
-# from .stock_market_listing import StockMarketListing
+from .stock_market_listing import StockMarketListing
 from .transaction import Transaction
 from datetime import datetime
+from .transaction_history import TransactionHistory
 
 #TODO : Increment the money made by the engine with the spread when matching orders
 #TODO : Switch the spread and money logic to the MarketMaker class
@@ -12,7 +13,7 @@ class OrderMatchingEngine:
     money = 0
 
 
-    def __init__(self,stock_listing):
+    def __init__(self,stock_listing :StockMarketListing):
         
         self.sell_heapq = MinOrderHeap()
         self.buy_heapq = MaxOrderHeap()
@@ -88,7 +89,6 @@ class OrderMatchingEngine:
         pass
         
 
-    #TODO: Don't forget to adjust bid/ask price after transaction
     def complete_transaction(self,sell_order : Order,buy_order : Order,price):
 
         
@@ -132,14 +132,22 @@ class OrderMatchingEngine:
             transaction_type="Buy",
             total_value=trade_quantity * price
         )
+        transaction_history = TransactionHistory()
+        transaction_history.add_transaction(transaction)
 
         #If the order is fully executed, remove it from the heap
         if sell_order.remaining_quantity == 0:
             self.sell_heapq.pop()
-            # print("Sell order fully executed")
-        print(buy_order.remaining_quantity, "BUY RODEER")
         if buy_order.remaining_quantity == 0:
             self.buy_heapq.pop()
-            print("Buy order fully executed")
+    
+
+    def __str__(self):
         
-        return transaction
+        best_bid = self.stock_listing.bid_price
+        best_ask = self.stock_listing.ask_price
+
+        instant_buy_orders = self.instant_buy_orders
+        instant_sell_orders = self.instant_sell_orders
+
+        return f"Best Bid: {best_bid} Best Ask: {best_ask} Instant Buy Orders: {instant_buy_orders} Instant Sell Orders: {instant_sell_orders}"

@@ -22,3 +22,7 @@ class StockMarketListing:
 
     def update_ask_price(self,price):
         self.ask_price = price
+
+
+    def __str__(self):
+        return f"Ticker: {self.ticker_symbol} Company: {self.company_name} Last Price: {self.last_price} Bid Price: {self.bid_price} Ask Price: {self.ask_price}"

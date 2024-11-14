@@ -33,3 +33,8 @@ class StockExchange:
         self.stock_marketMakers[ticker_symbol] = marketMaker
 
         self.stock_market_listings[stock_market_listing.ticker_symbol] = stock_market_listing
+
+    def match_orders(self):
+
+        for marketMaker in self.stock_marketMakers.values():
+            marketMaker.ordermatching_engine.match_orders()
