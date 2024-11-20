@@ -8,7 +8,7 @@ class Transaction:
         self.transaction_date = transaction_date
         self.buyer = buyer            # Buyer is the Client object from the buy_order
         self.seller = seller          # Seller is the Client object from the sell_order
-        self.transaction_type = transaction_type  # "Buy" or "Sell"
+        self.transaction_type = transaction_type  # True or False
         self.total_value = total_value            # Total value of the transaction (price * quantity)
     
     def __str__(self):

@@ -18,14 +18,14 @@ class MarketMaker:
 
     def process_order(self,order : Order):
         
-        if order.price_type == "Market":
+        if isinstance(order,Order):
             self.adjust_order_price(order)
 
-        if order.order_type == "buy":
+        if order.order_type == True:
             
             self.ordermatching_engine.add_buy_order(order)
         
-        elif order.order_type == "sell":
+        elif order.order_type == False:
             self.ordermatching_engine.add_sell_order(order)
 
         else: print(f"unimplemented {order.order_type} " + " order type.")
@@ -37,7 +37,7 @@ class MarketMaker:
 
         stock_price = self.stock_listing.last_price
 
-        if order.order_type == "buy":
+        if order.order_type == True:
             quantity = order.remaining_quantity
             self.ordermatching_engine.instant_buy_orders += quantity
 
@@ -49,7 +49,7 @@ class MarketMaker:
             order_price_adjusted = stock_price + (self.smallest_increment * buy_sell_ratio) / self.volume_sensitivity
             
 
-        elif order.order_type == "sell":
+        elif order.order_type == False:
             quantity = order.remaining_quantity
             self.ordermatching_engine.instant_sell_orders += quantity
 

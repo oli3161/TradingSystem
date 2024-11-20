@@ -1,22 +1,33 @@
 import heapq
 from itertools import count
+
+from .limit_order import LimitOrder
 from .order import Order
 
 class MinOrderHeap:
     def __init__(self):
         self.heap = []
         self.counter = count()  # Unique sequence count for each item
+        self.queue = []
 
     def push(self, order: Order):
         """Adds an order to the heap, prioritizing by price and FIFO order for duplicate prices."""
         # Use (price, sequence_number, order) to maintain order priority
-        heapq.heappush(self.heap, (order.price, next(self.counter), order))
+        if isinstance(order,LimitOrder):
+            self.queue.append(order)
+        else : 
+            heapq.heappush(self.heap, (order.price, next(self.counter), order))
 
     def pop(self)->Order:
         """Removes and returns the order with the lowest price."""
+        order=self.peek()
         if not self.is_empty():
+            if isinstance(order,LimitOrder):
+                self.queue.pop(order)
+            else : 
+                return heapq.heappop(self.heap)[2]
             # Return only the order object
-            return heapq.heappop(self.heap)[2]
+            
         else:
             raise IndexError("pop from an empty heap")
 

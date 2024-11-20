@@ -4,16 +4,16 @@ import random
 
 class Order :
 
-    def __init__(self, ticker, quantity, order_date, client,order_type,assets : Assets, order_status = "Pending") :
+    def __init__(self, ticker,price, quantity, order_date, client,order_type,assets : Assets, order_status = "Pending") :
         
         self.order_date = order_date
         self.order_status = order_status
         self.client = client
-        
+        self.price=price
         self.ticker = ticker
         self.remaining_quantity = quantity
         self.initial_quantity = quantity
-        self.order_type = order_type        # Can only be "Buy" or "Sell"
+        self.order_type = order_type        # Can only be True or False
         self.asset : Assets = assets
 
 
@@ -56,7 +56,7 @@ class Order :
     def __str__(self):
         return (f"Order(ticker={self.ticker}, price={self.price}, quantity={self.initial_quantity}, "
                 f"order_date={self.order_date}, client={self.client}, order_type={self.order_type}, "
-                f"price_type={self.price_type}, order_status={self.order_status}, asset={self.asset})")
+                f"order_status={self.order_status}, asset={self.asset})")
     
 
    

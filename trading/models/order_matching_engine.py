@@ -1,5 +1,6 @@
 from .heaps import MinOrderHeap, MaxOrderHeap
 from .order import Order
+from .limit_order import LimitOrder
 from .stock_market_listing import StockMarketListing
 from .transaction import Transaction
 from datetime import datetime
@@ -56,13 +57,13 @@ class OrderMatchingEngine:
                 # Match the orders
                 self.complete_transaction(best_sell_order,best_buy_order,best_buy_order.price)
                 
-            elif best_buy_order.price_type == "Market" and best_sell_order.price_type == "Market" :
+            elif isinstance(best_buy_order,LimitOrder) and isinstance(best_sell_order,LimitOrder) :
 
-                self.match_market_orders(best_sell_order,best_buy_order)
+                self.match_limit_market_orders(best_sell_order,best_buy_order)
 
-            elif best_buy_order.price_type == "Limit" and best_sell_order.price_type == "Market" :
+            elif isinstance(best_buy_order,Order) and isinstance(best_sell_order,Order) :
 
-                self.match_limit_market_orders(best_buy_order,best_sell_order)
+                self.match_market_orders(best_buy_order,best_sell_order)
 
             else:
                 break
@@ -129,7 +130,7 @@ class OrderMatchingEngine:
             transaction_date=datetime.now(),
             buyer=buy_order.client,
             seller=sell_order.client,
-            transaction_type="Buy",
+            transaction_type=True,
             total_value=trade_quantity * price
         )
         transaction_history = TransactionHistory()

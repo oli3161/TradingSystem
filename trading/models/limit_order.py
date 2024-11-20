@@ -4,8 +4,8 @@ from .order import Order
 
 class LimitOrder(Order) :
 
-    def __init__(self,price) :
+    def __init__(self) :
         
         Order.__init__(self)
-        self.price=price
+        
 
