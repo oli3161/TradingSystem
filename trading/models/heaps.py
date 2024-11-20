@@ -30,6 +30,10 @@ class MinOrderHeap:
     def is_empty(self):
         """Checks if the heap is empty."""
         return len(self.heap) == 0
+    
+    def get_order_list(self):
+        """Returns the heap as a list of orders."""
+        return [order for _, _, order in self.heap]
 
     def size(self):
         """Returns the number of orders in the heap."""
@@ -67,6 +71,10 @@ class MaxOrderHeap:
     def is_empty(self):
         """Checks if the heap is empty."""
         return len(self.heap) == 0
+
+    def get_order_list(self):
+        """Returns the heap as a list of orders."""
+        return [order for _, _, order in self.heap]
 
     def size(self):
         """Returns the number of orders in the heap."""

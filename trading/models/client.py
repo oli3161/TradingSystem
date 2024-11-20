@@ -22,3 +22,6 @@ class Client:
 
         #Verbose
         print(order)
+
+    def __str__(self):
+        return (f"Client(id={self.id})")
