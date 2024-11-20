@@ -1,19 +1,18 @@
 # from .client import Client
 from .assets import Assets
-
+import random
 
 class Order :
 
-    def __init__(self, ticker, price, quantity, order_date, client,order_type,assets : Assets, price_type="Market", order_status = "Pending") :
+    def __init__(self, ticker, quantity, order_date, client,order_type,assets : Assets, order_status = "Pending") :
         
         self.order_date = order_date
         self.order_status = order_status
         self.client = client
+        
         self.ticker = ticker
         self.remaining_quantity = quantity
         self.initial_quantity = quantity
-        self.price_type = price_type
-        self.price = price
         self.order_type = order_type        # Can only be "Buy" or "Sell"
         self.asset : Assets = assets
 
@@ -43,6 +42,7 @@ class Order :
         money = self.asset.remove_money(amount)
 
         return money
+    
 
     def add_money(self, amount):
         self.asset.add_money(amount)
@@ -57,3 +57,6 @@ class Order :
         return (f"Order(ticker={self.ticker}, price={self.price}, quantity={self.initial_quantity}, "
                 f"order_date={self.order_date}, client={self.client}, order_type={self.order_type}, "
                 f"price_type={self.price_type}, order_status={self.order_status}, asset={self.asset})")
+    
+
+   
