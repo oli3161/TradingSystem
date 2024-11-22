@@ -1,5 +1,7 @@
 from .order_matching_engine import OrderMatchingEngine
 from .order import Order
+from .market_order import MarketOrder
+from .limit_order import LimitOrder
 from .stock_market_listing import StockMarketListing
 
 
@@ -11,24 +13,24 @@ class MarketMaker:
         self.stock_listing = stock_listing
         self.ticker_symbol = ticker_symbol
         self.ordermatching_engine = ordermatching_engine
-        self.ordermatching_engine = ordermatching_engine
+
         self.smallest_increment = 0.01
         self.volume_sensitivity = 10 # sensitivity to volume changes
 
 
     def process_order(self,order : Order):
         
-        if isinstance(order,Order):
+        if isinstance(order,MarketOrder):
             self.adjust_order_price(order)
 
-        if order.order_type == True:
+        if order.is_buy_order() == True:
             
             self.ordermatching_engine.add_buy_order(order)
         
-        elif order.order_type == False:
+        elif order.is_buy_order() == False:
             self.ordermatching_engine.add_sell_order(order)
 
-        else: print(f"unimplemented {order.order_type} " + " order type.")
+        else: print(f"unimplemented {order.is_buy_order()} " + " order type.")
 
         
 
@@ -36,9 +38,11 @@ class MarketMaker:
     def adjust_order_price(self, order: Order):
 
         stock_price = self.stock_listing.last_price
+        quantity = order.remaining_quantity
 
-        if order.order_type == True:
-            quantity = order.remaining_quantity
+
+        if order.is_buy_order() == True:
+            
             self.ordermatching_engine.instant_buy_orders += quantity
 
             if self.ordermatching_engine.instant_sell_orders == 0:
@@ -49,8 +53,8 @@ class MarketMaker:
             order_price_adjusted = stock_price + (self.smallest_increment * buy_sell_ratio) / self.volume_sensitivity
             
 
-        elif order.order_type == False:
-            quantity = order.remaining_quantity
+        elif order.is_buy_order() == False:
+
             self.ordermatching_engine.instant_sell_orders += quantity
 
             if self.ordermatching_engine.instant_buy_orders == 0:

@@ -4,7 +4,7 @@ import random
 
 class Order :
 
-    def __init__(self, ticker,price, quantity, order_date, client,order_type,assets : Assets, order_status = "Pending") :
+    def __init__(self, ticker,price, quantity, order_date, client,buy_order,assets : Assets, order_status = "Pending") :
         
         self.order_date = order_date
         self.order_status = order_status
@@ -13,9 +13,14 @@ class Order :
         self.ticker = ticker
         self.remaining_quantity = quantity
         self.initial_quantity = quantity
-        self.order_type = order_type        # Can only be True or False
+        self.buy_order = buy_order        # Can only be True or False, if False then it is a sell order
         self.asset : Assets = assets
 
+    def is_buy_order(self):
+        return self.buy_order
+
+    def is_sell_order(self):
+        return self.buy_order
 
     def complete_order(self) :
         
