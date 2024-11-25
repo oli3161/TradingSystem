@@ -5,6 +5,7 @@ from .stock_market_listing import StockMarketListing
 from .transaction import Transaction
 from datetime import datetime
 from .transaction_history import TransactionHistory
+from .heaps import AbstractExecutionQueue
 
 #TODO : Increment the money made by the engine with the spread when matching orders
 #TODO : Switch the spread and money logic to the MarketMaker class
