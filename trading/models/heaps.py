@@ -8,11 +8,11 @@ from .order import Order
 
 
 
-class AbstractExecutionQueue(ABC):
+class ExecutionQueue(ABC):
     """Abstract class defining the interface for order heap implementations."""
 
-    def __init__(self,is_min_heap=True):
-        self.is_min_heap = is_min_heap
+    def __init__(self,min_heap=True):
+        self.min_heap = min_heap
         
     
     @abstractmethod
@@ -42,26 +42,26 @@ class AbstractExecutionQueue(ABC):
 
 
 
-class PriorityQueue(AbstractExecutionQueue):
-    def __init__(self, is_min_heap=True):
+class PriorityQueue(ExecutionQueue):
+    def __init__(self, min_heap=True):
         """
         Initializes an OrderHeap.
         
         Args:
-            is_min_heap (bool): If True, behaves as a min-heap (ascending order by price).
+            min_heap (bool): If True, behaves as a min-heap (ascending order by price).
                                 If False, behaves as a max-heap (descending order by price).
         """
         self.heap = []
         self.market_order_queue = []
         self.counter = count()  # Unique sequence count for each item
-        self.is_min_heap = is_min_heap
+        self.is_min_heap = min_heap
 
     def push(self, order: Order):
         """Adds an order to the heap."""
         if isinstance(order, LimitOrder):
             self.market_order_queue.append(order)
         else:
-            # Use price or -price for ordering based on heap type
+            # Si c'est min_heap on ajoute l'order avec son prix, sinon on ajoute  avec son prix négatif pour simulé un max_heap
             price = order.price if self.is_min_heap else -order.price
             heapq.heappush(self.heap, (price, next(self.counter), order))
 
