@@ -16,6 +16,8 @@ pip install -r requirements.txt
 python trading/main.py
 ```
 
+The websocket server is running on port `8765`.
+
 ## Test
 
 ```bash
