@@ -1,5 +1,5 @@
 import sys
-sys.path.append('C:/Users/ogigu/OneDrive/Documents/Ecole/Algo/TradingSystem/trading')  # Adjust to the actual path of the 'trading' folder
+sys.path.append('C:/A/ETS/AlgoETS/Simulateur/TradingSystem/TradingSystem/trading')  # Adjust to the actual path of the 'trading' folder
 
 import unittest
 from models import *
@@ -25,7 +25,7 @@ class MarketMaker(unittest.TestCase):
 
     def test_add_buy_order(self):
 
-        order = Order("AAPL",100,400,"2021-01-01",Client("ClientName"),"buy",Assets(PortfolioStock("AAPL", 10, 150.0,120),1000))
+        order = Order("AAPL",100,400,"2021-01-01",Client("ClientName"),True,Assets(PortfolioStock("AAPL", 10, 150.0,120),1000))
         self.stock_exchange.submit_order(order)
 
         market_maker = self.stock_exchange.getMarketMaker("AAPL")
@@ -35,10 +35,10 @@ class MarketMaker(unittest.TestCase):
 
     def test_match_orders(self):
 
-        order = Order("AAPL",100,5,"2021-01-01",Client("ClientName"),"buy",Assets(PortfolioStock("AAPL", 10, 150.0,120),1000))
+        order = Order("AAPL",100,5,"2021-01-01",Client("ClientName"),True,Assets(PortfolioStock("AAPL", 10, 150.0,120),1000))
         self.stock_exchange.submit_order(order)
 
-        order = Order("AAPL",100,5,"2021-01-01",Client("ClientName"),"sell",Assets(PortfolioStock("AAPL", 10, 150.0,120),1000))
+        order = Order("AAPL",100,5,"2021-01-01",Client("ClientName"),False,Assets(PortfolioStock("AAPL", 10, 150.0,120),1000))
         self.stock_exchange.submit_order(order)
 
         self.order_matching_engine.match_orders()

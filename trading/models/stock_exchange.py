@@ -19,7 +19,7 @@ class StockExchange:
 
         stock_market_listing.process_order(order)
 
-    def getMarketMaker(self,ticker_symbol):
+    def getMarketMaker(self,ticker_symbol) -> MarketMaker:
         return self.stock_marketMakers.get(ticker_symbol,'Key not found')
 
     

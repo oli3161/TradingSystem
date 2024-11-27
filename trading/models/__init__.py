@@ -8,3 +8,7 @@ from .stock_exchange import StockExchange
 from .stock_market_listing import StockMarketListing
 from .order_matching_engine import OrderMatchingEngine
 from .market_maker import MarketMaker
+from .order_flow import OrderFlow
+from .limit_order import LimitOrder
+from .market_order import MarketOrder
+from .heaps import PriorityQueue
