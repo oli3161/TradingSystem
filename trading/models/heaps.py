@@ -57,31 +57,58 @@ class PriorityQueue(ExecutionQueue):
         self.is_min_heap = min_heap
 
     def push(self, order: Order):
-        """Adds an order to the heap."""
+        """Adds an order to the appropriate data structure."""
         if isinstance(order, LimitOrder):
-            self.market_order_queue.append(order)
-        else:
-            # Si c'est min_heap on ajoute l'order avec son prix, sinon on ajoute  avec son prix négatif pour simulé un max_heap
-            price = order.price if self.is_min_heap else -order.price
+            # If it's a limit order, push it to the heap
+            price = order.price if self.is_min_heap else -order.price  # Adjust price for heap behavior
             heapq.heappush(self.heap, (price, next(self.counter), order))
+        else:
+            # If it's a market order, add it to the queue
+            self.market_order_queue.append(order)
 
     def pop(self) -> Order:
-        """Removes and returns the order with the highest/lowest price."""
-        if not self.is_empty():
-            return heapq.heappop(self.heap)[2]
+        """Removes and returns the best order according to the conditions."""
+        if self.is_empty():
+            raise IndexError("pop from an empty priority queue")
+
+        best_order = self._get_best_order()
+        if best_order in self.market_order_queue:
+            self.market_order_queue.remove(best_order)
         else:
-            raise IndexError("pop from an empty heap")
+            heapq.heappop(self.heap)  # Remove the top element from the heap
+        return best_order
 
     def peek(self) -> Order:
-        """Returns the order with the highest/lowest price without removing it."""
-        if not self.is_empty():
-            return self.heap[0][2]
-        else:
-            raise IndexError("peek from an empty heap")
+        """Returns the best order according to the conditions without removing it."""
+        if self.is_empty():
+            raise IndexError("peek from an empty priority queue")
+
+        return self._get_best_order()
+
+    def _get_best_order(self):
+        """Determines the best order between the heap and market order queue."""
+        heap_top = self.heap[0][2] if self.heap else None  # Get order from heap (price, counter, order)
+        queue_top = self.market_order_queue[0] if self.market_order_queue else None  # Get first market order
+
+        # If only one exists, return it as the best
+        if heap_top and not queue_top:
+            return heap_top
+        if queue_top and not heap_top:
+            return queue_top
+
+        # Compare prices
+        if heap_top.price != queue_top.price:
+            if self.is_min_heap:
+                return heap_top if heap_top.price < queue_top.price else queue_top
+            else:
+                return heap_top if heap_top.price > queue_top.price else queue_top
+
+        # If prices are the same, compare order_date (FIFO for queue)
+        return heap_top if heap_top.order_date <= queue_top.order_date else queue_top
 
     def is_empty(self):
         """Checks if the heap is empty."""
-        return len(self.heap) == 0
+        return len(self.heap) == 0 and len(self.market_order_queue) == 0
 
     def get_order_list(self):
         """Returns the heap as a list of orders."""

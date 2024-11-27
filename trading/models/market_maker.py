@@ -51,6 +51,9 @@ class MarketMaker:
             buy_sell_ratio = self.ordermatching_engine.instant_buy_orders / self.ordermatching_engine.instant_sell_orders
 
             order_price_adjusted = stock_price + (self.smallest_increment * buy_sell_ratio) / self.volume_sensitivity
+
+            self.stock_listing.update_bid_price(order_price_adjusted)
+            order.price = self.stock_listing.bid_price
             
 
         elif order.is_buy_order() == False:
@@ -63,8 +66,11 @@ class MarketMaker:
             buy_sell_ratio = self.ordermatching_engine.instant_buy_orders / self.ordermatching_engine.instant_sell_orders
 
             order_price_adjusted = stock_price - (self.smallest_increment * buy_sell_ratio) / self.volume_sensitivity
+
+            self.stock_listing.update_ask_price(order_price_adjusted)
+            order.price = self.stock_listing.ask_price
         
         print(f"Adjusted price: {order_price_adjusted}")
         
-        order.price = order_price_adjusted
+     
         

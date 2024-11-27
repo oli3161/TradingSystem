@@ -1,12 +1,14 @@
 # from .client import Client
 from .assets import Assets
 import random
+from datetime import datetime
+
 
 class Order :
 
-    def __init__(self, ticker,price, quantity, order_date, client,buy_order,assets : Assets, order_status = "Pending") :
+    def __init__(self, ticker,price, quantity, client,buy_order,assets : Assets, order_status = "Pending") :
         
-        self.order_date = order_date
+        self.order_date = datetime.now()
         self.order_status = order_status
         self.client = client
         self.price=price
