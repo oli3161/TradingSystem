@@ -30,6 +30,7 @@ class OrderFlow(Client):
 
     def randomize_quantity(self,order:Order):
         order.initial_quantity=random.uniform(0.0001, 1000000.0)
+        print(order.initial_quantity)
     
     def randomize_type(self,order:Order):
         type=random.randint(1,2)
@@ -37,3 +38,5 @@ class OrderFlow(Client):
             order.order_type=True
         else :
             order.order_type=False
+
+        print(order.order_type)

@@ -1,8 +1,9 @@
 @startuml exchange_logic
 
 class Client{
-    +sendOrder(Order)
-    +orderFilled(Order)
+    + id : Portfolio
+    +submit_order(Order : order, StockExchange : stock_exchange)
+    +notify_completed_order(Order)
     +updatePortfolio()
 }
 
@@ -10,6 +11,9 @@ class MarketMaker{
 +updateOrderPrice(Order)
 }
 
+class OrderFlow extends Client{
+
+}
 
 
 
@@ -21,7 +25,13 @@ class OrderMatchingEngine{
 }
 
 class Assets{
-
+    + portfolio_stock : PortfolioStock
+    + money_amount 
+    + add_stock()
+    + add_shares(quanity,price)
+    + remove_shares(quantity,price)
+    + add_money(amount)
+    + remove_money(amount)
 }
 
 class Heaps{
@@ -55,7 +65,10 @@ class Order{
 
 
 
-
+Assets ..> PortfolioStock : <<uses>> 
+Client ..> StockExchange : <<uses>>
+Client ..> Order : <<uses>>
+Client o-> Portfolio
 
 
 
