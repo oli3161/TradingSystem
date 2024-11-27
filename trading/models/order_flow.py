@@ -20,14 +20,6 @@ class OrderFlow(Client):
             stock_exchange.submit_order(order)
 
 
-    def notify_completed_order(self,order : Order) :
-        
-        self.portfolio.add_stock(order.asset.portfolio_stock)
-
-        #Verbose
-        print(order)
-
-
     def randomize_quantity(self,order:Order):
         order.initial_quantity=random.uniform(0.0001, 1000000.0)
         print(order.initial_quantity)
