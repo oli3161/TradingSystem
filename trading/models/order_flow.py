@@ -1,39 +1,29 @@
-
-
-from .order import Order
-from .stock_exchange import StockExchange
-from .client import Client
 import random
 
+from trading.models.client import Client
+from trading.models.order import Order
+from trading.models.stock_exchange import StockExchange
+from mypy_extensions import NoReturn
+
 class OrderFlow(Client):
+    def __init__(self,id: str) -> NoReturn:
+        Client.__init__(self,id)
 
-    def __init__(self):
-        Client.__init__(self)
-
-    
-        
-
-    def submit_order_ntimes(self,order : Order, stock_exchange : StockExchange,n : int):
-        for i in range(n) :
+    def submit_order_ntimes(self, order: Order, stock_exchange: StockExchange, n: int):
+        for i in range(n):
             self.randomize_quantity(order)
             self.randomize_type(order)
             stock_exchange.submit_order(order)
 
+    def randomize_quantity(self, order: Order):
+        order.initial_quantity = random.uniform(0.0001, 1000000.0)
+        print(order.initial_quantity)
 
-    def notify_completed_order(self,order : Order) :
-        
-        self.portfolio.add_stock(order.asset.portfolio_stock)
+    def randomize_type(self, order: Order):
+        type = random.randint(1, 2)
+        if type == 1:
+            order.order_type = "Buy"
+        else:
+            order.order_type = "Sell"
 
-        #Verbose
-        print(order)
-
-
-    def randomize_quantity(self,order:Order):
-        order.initial_quantity=random.uniform(0.0001, 1000000.0)
-    
-    def randomize_type(self,order:Order):
-        type=random.randint(1,2)
-        if(type==1):
-            order.order_type="Buy"
-        else :
-            order.order_type="Sell"
+        print(order.order_type)

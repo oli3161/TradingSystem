@@ -1,0 +1,43 @@
+[tool.poetry]
+name = "TradingSystem"
+version = "0.1.0"
+description = "Trading System AlgoETS"
+authors = ["Oliver Guiguère <oliver.giguère.1@ens.etsmtl.ca>", "Antoine <antoine.boucher.1@ens.etsmtl.ca>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+websockets = "==14.1"
+
+[tool.poetry.dev-dependencies]
+pytest = "^7.2.0"
+black = "^23.1.0"
+flake8 = "^4.0.1"
+mypy = "^1.2.0"
+isort = "^5.10.1"
+pre-commit = "^3.3.0"
+ruff = "^0.0.277"
+pytest-benchmark = "^3.4.1"
+asv = "^0.6.0"
+pyannotate = "*"
+
+# Documentation Tools
+mkdocs = "^1.5.0"
+mkdocs-material = "^9.3.0"
+mkdocs-bibtex = "^0.4.0"
+mkdocs-jupyter = "^0.13.0"
+mkdocstrings = "^0.19.0"
+mkdocs-include-markdown-plugin = "^1.0.0"
+mkdocs-graphviz = "^1.0.0"
+mkdocs-mermaid2-plugin = "^1.2.1"
+mkdocs-git-revision-date-localized-plugin = "^0.4.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.mypy]
+python_version = "3.12"
+warn_unused_configs = true
+ignore_missing_imports = true
+strict = true

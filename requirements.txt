@@ -1,0 +1,7 @@
+websockets==14.1
+numpy
+scipy
+pandas
+bson==0.5.10
+uv==0.5.2
+poetry==1.8.4
