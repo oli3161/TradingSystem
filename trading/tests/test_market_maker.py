@@ -1,13 +1,18 @@
 import pytest
 
-from trading.models.client import Client
-from trading.models.portfolio_stock import PortfolioStock
 from trading.models.assets import Assets
-from trading.models.stock_exchange import StockExchange
+from trading.models.client import Client
 from trading.models.order import Order
+from trading.models.portfolio_stock import PortfolioStock
+from trading.models.stock_exchange import StockExchange
+from trading.models.market_maker import MarketMaker
+from trading.models.order_matching_engine import OrderMatchingEngine
+from typing import Tuple
+from mypy_extensions import NoReturn
+
 
 @pytest.fixture
-def setup_market():
+def setup_market() -> Tuple[StockExchange, MarketMaker, OrderMatchingEngine, Client, Assets, Client, Assets]:
     stock_exchange = StockExchange("Quebek")
 
     stock_exchange.addStockMarketListing("AAPL", "Apple Inc", 150.0)
@@ -21,9 +26,18 @@ def setup_market():
     seller_stock = PortfolioStock("AAPL", 10, 120.0, 150)
     seller_asset = Assets(seller_stock, 0)
 
-    return stock_exchange, market_maker, order_matching_engine, client_buyer, buyer_asset, client_seller, seller_asset
+    return (
+        stock_exchange,
+        market_maker,
+        order_matching_engine,
+        client_buyer,
+        buyer_asset,
+        client_seller,
+        seller_asset,
+    )
 
-def test_add_buy_order(setup_market):
+
+def test_add_buy_order(setup_market: Tuple[StockExchange, MarketMaker, OrderMatchingEngine, Client, Assets, Client, Assets]) -> NoReturn:
     stock_exchange, market_maker, _, _, _, _, _ = setup_market
 
     order = Order(
@@ -33,14 +47,15 @@ def test_add_buy_order(setup_market):
         "2021-01-01",
         Client("ClientName"),
         True,
-        Assets(PortfolioStock("AAPL", 10, 150.0, 120), 1000)
+        Assets(PortfolioStock("AAPL", 10, 150.0, 120), 1000),
     )
     stock_exchange.submit_order(order)
 
     # Assert the order is in the buy heap
     assert order in market_maker.ordermatching_engine.buy_heapq.get_order_list()
 
-def test_match_orders(setup_market):
+
+def test_match_orders(setup_market: Tuple[StockExchange, MarketMaker, OrderMatchingEngine, Client, Assets, Client, Assets]) -> NoReturn:
     stock_exchange, _, order_matching_engine, _, _, _, _ = setup_market
 
     buy_order = Order(
@@ -50,7 +65,7 @@ def test_match_orders(setup_market):
         "2021-01-01",
         Client("ClientName"),
         True,
-        Assets(PortfolioStock("AAPL", 10, 150.0, 120), 1000)
+        Assets(PortfolioStock("AAPL", 10, 150.0, 120), 1000),
     )
     stock_exchange.submit_order(buy_order)
 
@@ -61,7 +76,7 @@ def test_match_orders(setup_market):
         "2021-01-01",
         Client("ClientName"),
         False,
-        Assets(PortfolioStock("AAPL", 10, 150.0, 120), 1000)
+        Assets(PortfolioStock("AAPL", 10, 150.0, 120), 1000),
     )
     stock_exchange.submit_order(sell_order)
 

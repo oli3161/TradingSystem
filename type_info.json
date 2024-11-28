@@ -1,0 +1,703 @@
+[
+    {
+        "path": "trading/models/assets.py",
+        "line": 8,
+        "func_name": "Assets.__init__",
+        "type_comments": [
+            "(trading.models.portfolio_stock.PortfolioStock, int) -> pyannotate_runtime.collect_types.NoReturnType"
+        ],
+        "samples": 40
+    },
+    {
+        "path": "trading/models/assets.py",
+        "line": 18,
+        "func_name": "Assets.add_shares",
+        "type_comments": [
+            "(int, float) -> pyannotate_runtime.collect_types.NoReturnType"
+        ],
+        "samples": 4
+    },
+    {
+        "path": "trading/models/assets.py",
+        "line": 21,
+        "func_name": "Assets.remove_shares",
+        "type_comments": [
+            "(int, float) -> int"
+        ],
+        "samples": 4
+    },
+    {
+        "path": "trading/models/assets.py",
+        "line": 28,
+        "func_name": "Assets.add_money",
+        "type_comments": [
+            "(float) -> pyannotate_runtime.collect_types.NoReturnType"
+        ],
+        "samples": 4
+    },
+    {
+        "path": "trading/models/assets.py",
+        "line": 31,
+        "func_name": "Assets.remove_money",
+        "type_comments": [
+            "(float) -> float"
+        ],
+        "samples": 4
+    },
+    {
+        "path": "trading/models/client.py",
+        "line": 10,
+        "func_name": "Client.__init__",
+        "type_comments": [
+            "(int) -> pyannotate_runtime.collect_types.NoReturnType",
+            "(str) -> pyannotate_runtime.collect_types.NoReturnType"
+        ],
+        "samples": 51
+    },
+    {
+        "path": "trading/models/client.py",
+        "line": 18,
+        "func_name": "Client.notify_completed_order",
+        "type_comments": [
+            "(trading.models.limit_order.LimitOrder, bool) -> pyannotate_runtime.collect_types.NoReturnType",
+            "(trading.models.market_order.MarketOrder, bool) -> pyannotate_runtime.collect_types.NoReturnType"
+        ],
+        "samples": 7
+    },
+    {
+        "path": "trading/models/client.py",
+        "line": 25,
+        "func_name": "Client.__str__",
+        "type_comments": [
+            "() -> str"
+        ],
+        "samples": 8
+    },
+    {
+        "path": "trading/models/heaps.py",
+        "line": 46,
+        "func_name": "PriorityQueue.__init__",
+        "type_comments": [
+            "(bool) -> pyannotate_runtime.collect_types.NoReturnType"
+        ],
+        "samples": 40
+    },
+    {
+        "path": "trading/models/heaps.py",
+        "line": 59,
+        "func_name": "PriorityQueue.push",
+        "type_comments": [
+            "(trading.models.market_order.MarketOrder) -> pyannotate_runtime.collect_types.NoReturnType",
+            "(trading.models.limit_order.LimitOrder) -> pyannotate_runtime.collect_types.NoReturnType"
+        ],
+        "samples": 34
+    },
+    {
+        "path": "trading/models/heaps.py",
+        "line": 71,
+        "func_name": "PriorityQueue.pop",
+        "type_comments": [
+            "() -> trading.models.market_order.MarketOrder",
+            "() -> trading.models.limit_order.LimitOrder"
+        ],
+        "samples": 9
+    },
+    {
+        "path": "trading/models/heaps.py",
+        "line": 83,
+        "func_name": "PriorityQueue.peek",
+        "type_comments": [
+            "() -> trading.models.market_order.MarketOrder",
+            "() -> trading.models.limit_order.LimitOrder"
+        ],
+        "samples": 22
+    },
+    {
+        "path": "trading/models/heaps.py",
+        "line": 90,
+        "func_name": "PriorityQueue._get_best_order",
+        "type_comments": [
+            "() -> trading.models.market_order.MarketOrder",
+            "() -> trading.models.limit_order.LimitOrder"
+        ],
+        "samples": 31
+    },
+    {
+        "path": "trading/models/heaps.py",
+        "line": 115,
+        "func_name": "PriorityQueue.is_empty",
+        "type_comments": [
+            "() -> bool"
+        ],
+        "samples": 45
+    },
+    {
+        "path": "trading/models/heaps.py",
+        "line": 119,
+        "func_name": "PriorityQueue.get_order_list",
+        "type_comments": [
+            "() -> List"
+        ],
+        "samples": 5
+    },
+    {
+        "path": "trading/models/heaps.py",
+        "line": 123,
+        "func_name": "PriorityQueue.size",
+        "type_comments": [
+            "() -> int"
+        ],
+        "samples": 2
+    },
+    {
+        "path": "trading/models/limit_order.py",
+        "line": 7,
+        "func_name": "LimitOrder.__init__",
+        "type_comments": [
+            "(str, float, int, trading.models.client.Client, bool, trading.models.assets.Assets, str) -> pyannotate_runtime.collect_types.NoReturnType",
+            "(str, float, int, str, bool, trading.models.assets.Assets, str) -> pyannotate_runtime.collect_types.NoReturnType"
+        ],
+        "samples": 30
+    },
+    {
+        "path": "trading/models/market_maker.py",
+        "line": 10,
+        "func_name": "MarketMaker.__init__",
+        "type_comments": [
+            "(trading.models.order_matching_engine.OrderMatchingEngine, str, trading.models.stock_market_listing.StockMarketListing) -> pyannotate_runtime.collect_types.NoReturnType"
+        ],
+        "samples": 5
+    },
+    {
+        "path": "trading/models/market_maker.py",
+        "line": 24,
+        "func_name": "MarketMaker.process_order",
+        "type_comments": [
+            "(trading.models.order.Order) -> pyannotate_runtime.collect_types.NoReturnType"
+        ],
+        "samples": 8
+    },
+    {
+        "path": "trading/models/market_order.py",
+        "line": 8,
+        "func_name": "MarketOrder.__init__",
+        "type_comments": [
+            "(str, float, int, trading.models.client.Client, bool, trading.models.assets.Assets, str) -> pyannotate_runtime.collect_types.NoReturnType",
+            "(str, float, int, str, bool, trading.models.assets.Assets, str) -> pyannotate_runtime.collect_types.NoReturnType"
+        ],
+        "samples": 30
+    },
+    {
+        "path": "trading/models/order.py",
+        "line": 10,
+        "func_name": "Order.__init__",
+        "type_comments": [
+            "(str, int, int, str, trading.models.client.Client, bool, trading.models.assets.Assets) -> pyannotate_runtime.collect_types.NoReturnType",
+            "(str, float, int, trading.models.client.Client, bool, trading.models.assets.Assets, str) -> pyannotate_runtime.collect_types.NoReturnType",
+            "(str, float, int, str, bool, trading.models.assets.Assets, str) -> pyannotate_runtime.collect_types.NoReturnType",
+            "(str, float, int, str, trading.models.client.Client, str, trading.models.assets.Assets) -> pyannotate_runtime.collect_types.NoReturnType"
+        ],
+        "samples": 66
+    },
+    {
+        "path": "trading/models/order.py",
+        "line": 33,
+        "func_name": "Order.is_buy_order",
+        "type_comments": [
+            "() -> trading.models.client.Client"
+        ],
+        "samples": 13
+    },
+    {
+        "path": "trading/models/order.py",
+        "line": 39,
+        "func_name": "Order.complete_order",
+        "type_comments": [
+            "() -> pyannotate_runtime.collect_types.NoReturnType"
+        ],
+        "samples": 7
+    },
+    {
+        "path": "trading/models/order.py",
+        "line": 46,
+        "func_name": "Order.add_shares",
+        "type_comments": [
+            "(int, float) -> pyannotate_runtime.collect_types.NoReturnType"
+        ],
+        "samples": 4
+    },
+    {
+        "path": "trading/models/order.py",
+        "line": 52,
+        "func_name": "Order.remove_shares",
+        "type_comments": [
+            "(int, float) -> int"
+        ],
+        "samples": 4
+    },
+    {
+        "path": "trading/models/order.py",
+        "line": 60,
+        "func_name": "Order.remove_money",
+        "type_comments": [
+            "(float) -> float"
+        ],
+        "samples": 4
+    },
+    {
+        "path": "trading/models/order.py",
+        "line": 68,
+        "func_name": "Order.decrease_quantity_traded",
+        "type_comments": [
+            "(int) -> pyannotate_runtime.collect_types.NoReturnType"
+        ],
+        "samples": 8
+    },
+    {
+        "path": "trading/models/order_flow.py",
+        "line": 9,
+        "func_name": "OrderFlow.__init__",
+        "type_comments": [
+            "(str) -> pyannotate_runtime.collect_types.NoReturnType"
+        ],
+        "samples": 1
+    },
+    {
+        "path": "trading/models/order_flow.py",
+        "line": 12,
+        "func_name": "OrderFlow.submit_order_ntimes",
+        "type_comments": [
+            "(trading.models.order.Order, trading.models.stock_exchange.StockExchange, int) -> pyannotate_runtime.collect_types.NoReturnType"
+        ],
+        "samples": 1
+    },
+    {
+        "path": "trading/models/order_flow.py",
+        "line": 18,
+        "func_name": "OrderFlow.randomize_quantity",
+        "type_comments": [
+            "(trading.models.order.Order) -> pyannotate_runtime.collect_types.NoReturnType"
+        ],
+        "samples": 5
+    },
+    {
+        "path": "trading/models/order_flow.py",
+        "line": 22,
+        "func_name": "OrderFlow.randomize_type",
+        "type_comments": [
+            "(trading.models.order.Order) -> pyannotate_runtime.collect_types.NoReturnType"
+        ],
+        "samples": 5
+    },
+    {
+        "path": "trading/models/order_matching_engine.py",
+        "line": 21,
+        "func_name": "OrderMatchingEngine.__init__",
+        "type_comments": [
+            "(trading.models.stock_market_listing.StockMarketListing) -> pyannotate_runtime.collect_types.NoReturnType"
+        ],
+        "samples": 15
+    },
+    {
+        "path": "trading/models/order_matching_engine.py",
+        "line": 32,
+        "func_name": "OrderMatchingEngine.add_sell_order",
+        "type_comments": [
+            "(trading.models.market_order.MarketOrder) -> pyannotate_runtime.collect_types.NoReturnType",
+            "(trading.models.limit_order.LimitOrder) -> pyannotate_runtime.collect_types.NoReturnType"
+        ],
+        "samples": 9
+    },
+    {
+        "path": "trading/models/order_matching_engine.py",
+        "line": 36,
+        "func_name": "OrderMatchingEngine.add_buy_order",
+        "type_comments": [
+            "(trading.models.market_order.MarketOrder) -> pyannotate_runtime.collect_types.NoReturnType",
+            "(trading.models.limit_order.LimitOrder) -> pyannotate_runtime.collect_types.NoReturnType"
+        ],
+        "samples": 9
+    },
+    {
+        "path": "trading/models/order_matching_engine.py",
+        "line": 40,
+        "func_name": "OrderMatchingEngine.match_orders",
+        "type_comments": [
+            "() -> pyannotate_runtime.collect_types.NoReturnType"
+        ],
+        "samples": 9
+    },
+    {
+        "path": "trading/models/order_matching_engine.py",
+        "line": 121,
+        "func_name": "OrderMatchingEngine.complete_transaction",
+        "type_comments": [
+            "(trading.models.market_order.MarketOrder, trading.models.market_order.MarketOrder, float) -> pyannotate_runtime.collect_types.NoReturnType",
+            "(trading.models.limit_order.LimitOrder, trading.models.market_order.MarketOrder, float) -> pyannotate_runtime.collect_types.NoReturnType",
+            "(trading.models.market_order.MarketOrder, trading.models.limit_order.LimitOrder, float) -> pyannotate_runtime.collect_types.NoReturnType"
+        ],
+        "samples": 4
+    },
+    {
+        "path": "trading/models/portfolio.py",
+        "line": 8,
+        "func_name": "Portfolio.__init__",
+        "type_comments": [
+            "() -> pyannotate_runtime.collect_types.NoReturnType"
+        ],
+        "samples": 51
+    },
+    {
+        "path": "trading/models/portfolio.py",
+        "line": 12,
+        "func_name": "Portfolio.add_stock",
+        "type_comments": [
+            "(trading.models.portfolio_stock.PortfolioStock) -> pyannotate_runtime.collect_types.NoReturnType"
+        ],
+        "samples": 8
+    },
+    {
+        "path": "trading/models/portfolio_stock.py",
+        "line": 4,
+        "func_name": "PortfolioStock.__init__",
+        "type_comments": [
+            "(str, int, float, float) -> pyannotate_runtime.collect_types.NoReturnType",
+            "(str, int, float, int) -> pyannotate_runtime.collect_types.NoReturnType"
+        ],
+        "samples": 38
+    },
+    {
+        "path": "trading/models/portfolio_stock.py",
+        "line": 27,
+        "func_name": "PortfolioStock.add_shares",
+        "type_comments": [
+            "(int, float) -> pyannotate_runtime.collect_types.NoReturnType"
+        ],
+        "samples": 4
+    },
+    {
+        "path": "trading/models/portfolio_stock.py",
+        "line": 38,
+        "func_name": "PortfolioStock.remove_shares",
+        "type_comments": [
+            "(int, float) -> int"
+        ],
+        "samples": 4
+    },
+    {
+        "path": "trading/models/stock_exchange.py",
+        "line": 11,
+        "func_name": "StockExchange.__init__",
+        "type_comments": [
+            "(str) -> pyannotate_runtime.collect_types.NoReturnType"
+        ],
+        "samples": 5
+    },
+    {
+        "path": "trading/models/stock_exchange.py",
+        "line": 16,
+        "func_name": "StockExchange.submit_order",
+        "type_comments": [
+            "(trading.models.order.Order) -> pyannotate_runtime.collect_types.NoReturnType"
+        ],
+        "samples": 8
+    },
+    {
+        "path": "trading/models/stock_exchange.py",
+        "line": 24,
+        "func_name": "StockExchange.getMarketMaker",
+        "type_comments": [
+            "(str) -> trading.models.market_maker.MarketMaker"
+        ],
+        "samples": 5
+    },
+    {
+        "path": "trading/models/stock_exchange.py",
+        "line": 27,
+        "func_name": "StockExchange.addStockMarketListing",
+        "type_comments": [
+            "(str, str, float) -> pyannotate_runtime.collect_types.NoReturnType"
+        ],
+        "samples": 5
+    },
+    {
+        "path": "trading/models/stock_market_listing.py",
+        "line": 5,
+        "func_name": "StockMarketListing.__init__",
+        "type_comments": [
+            "(str, float, float) -> pyannotate_runtime.collect_types.NoReturnType",
+            "(str, str, float) -> pyannotate_runtime.collect_types.NoReturnType"
+        ],
+        "samples": 15
+    },
+    {
+        "path": "trading/models/stock_market_listing.py",
+        "line": 12,
+        "func_name": "StockMarketListing.update_price",
+        "type_comments": [
+            "(float) -> pyannotate_runtime.collect_types.NoReturnType"
+        ],
+        "samples": 4
+    },
+    {
+        "path": "trading/models/stock_market_listing.py",
+        "line": 16,
+        "func_name": "StockMarketListing.update_bid_price",
+        "type_comments": [
+            "(float) -> pyannotate_runtime.collect_types.NoReturnType"
+        ],
+        "samples": 8
+    },
+    {
+        "path": "trading/models/stock_market_listing.py",
+        "line": 19,
+        "func_name": "StockMarketListing.update_ask_price",
+        "type_comments": [
+            "(float) -> pyannotate_runtime.collect_types.NoReturnType"
+        ],
+        "samples": 8
+    },
+    {
+        "path": "trading/models/transaction.py",
+        "line": 4,
+        "func_name": "Transaction.__init__",
+        "type_comments": [
+            "(str, float, int, datetime.datetime, trading.models.client.Client, trading.models.client.Client, bool, float) -> pyannotate_runtime.collect_types.NoReturnType"
+        ],
+        "samples": 4
+    },
+    {
+        "path": "trading/tests/conftest.py",
+        "line": 16,
+        "func_name": "collect_types_fixture",
+        "type_comments": [
+            "() -> Iterator"
+        ],
+        "samples": 19
+    },
+    {
+        "path": "trading/tests/test_client.py",
+        "line": 14,
+        "func_name": "setup_environment",
+        "type_comments": [
+            "() -> Tuple[trading.models.client.Client, trading.models.portfolio_stock.PortfolioStock, trading.models.order.Order, trading.models.stock_exchange.StockExchange, trading.models.order_matching_engine.OrderMatchingEngine]"
+        ],
+        "samples": 3
+    },
+    {
+        "path": "trading/tests/test_client.py",
+        "line": 26,
+        "func_name": "test_client_initialization",
+        "type_comments": [
+            "(Tuple[trading.models.client.Client, trading.models.portfolio_stock.PortfolioStock, trading.models.order.Order, trading.models.stock_exchange.StockExchange, trading.models.order_matching_engine.OrderMatchingEngine]) -> pyannotate_runtime.collect_types.NoReturnType"
+        ],
+        "samples": 1
+    },
+    {
+        "path": "trading/tests/test_client.py",
+        "line": 32,
+        "func_name": "test_add_stock_to_portfolio",
+        "type_comments": [
+            "(Tuple[trading.models.client.Client, trading.models.portfolio_stock.PortfolioStock, trading.models.order.Order, trading.models.stock_exchange.StockExchange, trading.models.order_matching_engine.OrderMatchingEngine]) -> pyannotate_runtime.collect_types.NoReturnType"
+        ],
+        "samples": 1
+    },
+    {
+        "path": "trading/tests/test_client.py",
+        "line": 39,
+        "func_name": "test_order_flow",
+        "type_comments": [
+            "(Tuple[trading.models.client.Client, trading.models.portfolio_stock.PortfolioStock, trading.models.order.Order, trading.models.stock_exchange.StockExchange, trading.models.order_matching_engine.OrderMatchingEngine]) -> pyannotate_runtime.collect_types.NoReturnType"
+        ],
+        "samples": 1
+    },
+    {
+        "path": "trading/tests/test_heaps.py",
+        "line": 13,
+        "func_name": "mock_data",
+        "type_comments": [
+            "() -> Tuple[trading.models.limit_order.LimitOrder, trading.models.limit_order.LimitOrder, trading.models.market_order.MarketOrder, trading.models.market_order.MarketOrder]"
+        ],
+        "samples": 5
+    },
+    {
+        "path": "trading/tests/test_heaps.py",
+        "line": 57,
+        "func_name": "priority_queues",
+        "type_comments": [
+            "() -> Tuple[trading.models.heaps.PriorityQueue, trading.models.heaps.PriorityQueue]"
+        ],
+        "samples": 5
+    },
+    {
+        "path": "trading/tests/test_heaps.py",
+        "line": 64,
+        "func_name": "test_push_and_peek_min_heap",
+        "type_comments": [
+            "(Tuple[trading.models.heaps.PriorityQueue, trading.models.heaps.PriorityQueue], Tuple[trading.models.limit_order.LimitOrder, trading.models.limit_order.LimitOrder, trading.models.market_order.MarketOrder, trading.models.market_order.MarketOrder]) -> pyannotate_runtime.collect_types.NoReturnType"
+        ],
+        "samples": 1
+    },
+    {
+        "path": "trading/tests/test_heaps.py",
+        "line": 81,
+        "func_name": "test_push_and_peek_max_heap",
+        "type_comments": [
+            "(Tuple[trading.models.heaps.PriorityQueue, trading.models.heaps.PriorityQueue], Tuple[trading.models.limit_order.LimitOrder, trading.models.limit_order.LimitOrder, trading.models.market_order.MarketOrder, trading.models.market_order.MarketOrder]) -> pyannotate_runtime.collect_types.NoReturnType"
+        ],
+        "samples": 1
+    },
+    {
+        "path": "trading/tests/test_heaps.py",
+        "line": 98,
+        "func_name": "test_pop_order_min_heap",
+        "type_comments": [
+            "(Tuple[trading.models.heaps.PriorityQueue, trading.models.heaps.PriorityQueue], Tuple[trading.models.limit_order.LimitOrder, trading.models.limit_order.LimitOrder, trading.models.market_order.MarketOrder, trading.models.market_order.MarketOrder]) -> pyannotate_runtime.collect_types.NoReturnType"
+        ],
+        "samples": 1
+    },
+    {
+        "path": "trading/tests/test_heaps.py",
+        "line": 116,
+        "func_name": "test_pop_order_max_heap",
+        "type_comments": [
+            "(Tuple[trading.models.heaps.PriorityQueue, trading.models.heaps.PriorityQueue], Tuple[trading.models.limit_order.LimitOrder, trading.models.limit_order.LimitOrder, trading.models.market_order.MarketOrder, trading.models.market_order.MarketOrder]) -> pyannotate_runtime.collect_types.NoReturnType"
+        ],
+        "samples": 1
+    },
+    {
+        "path": "trading/tests/test_heaps.py",
+        "line": 134,
+        "func_name": "test_market_orders_priority",
+        "type_comments": [
+            "(Tuple[trading.models.heaps.PriorityQueue, trading.models.heaps.PriorityQueue], Tuple[trading.models.limit_order.LimitOrder, trading.models.limit_order.LimitOrder, trading.models.market_order.MarketOrder, trading.models.market_order.MarketOrder]) -> pyannotate_runtime.collect_types.NoReturnType"
+        ],
+        "samples": 1
+    },
+    {
+        "path": "trading/tests/test_market_maker.py",
+        "line": 14,
+        "func_name": "setup_market",
+        "type_comments": [
+            "() -> Tuple[trading.models.stock_exchange.StockExchange, trading.models.market_maker.MarketMaker, trading.models.order_matching_engine.OrderMatchingEngine, trading.models.client.Client, trading.models.assets.Assets, trading.models.client.Client, trading.models.assets.Assets]"
+        ],
+        "samples": 2
+    },
+    {
+        "path": "trading/tests/test_market_maker.py",
+        "line": 40,
+        "func_name": "test_add_buy_order",
+        "type_comments": [
+            "(Tuple[trading.models.stock_exchange.StockExchange, trading.models.market_maker.MarketMaker, trading.models.order_matching_engine.OrderMatchingEngine, trading.models.client.Client, trading.models.assets.Assets, trading.models.client.Client, trading.models.assets.Assets]) -> pyannotate_runtime.collect_types.NoReturnType"
+        ],
+        "samples": 1
+    },
+    {
+        "path": "trading/tests/test_market_maker.py",
+        "line": 58,
+        "func_name": "test_match_orders",
+        "type_comments": [
+            "(Tuple[trading.models.stock_exchange.StockExchange, trading.models.market_maker.MarketMaker, trading.models.order_matching_engine.OrderMatchingEngine, trading.models.client.Client, trading.models.assets.Assets, trading.models.client.Client, trading.models.assets.Assets]) -> pyannotate_runtime.collect_types.NoReturnType"
+        ],
+        "samples": 1
+    },
+    {
+        "path": "trading/tests/test_order_engine.py",
+        "line": 14,
+        "func_name": "setup_engine",
+        "type_comments": [
+            "() -> Tuple[trading.models.order_matching_engine.OrderMatchingEngine, trading.models.stock_market_listing.StockMarketListing, trading.models.limit_order.LimitOrder, trading.models.limit_order.LimitOrder, trading.models.market_order.MarketOrder, trading.models.market_order.MarketOrder]"
+        ],
+        "samples": 10
+    },
+    {
+        "path": "trading/tests/test_order_engine.py",
+        "line": 68,
+        "func_name": "test_add_buy_order",
+        "type_comments": [
+            "(Tuple[trading.models.order_matching_engine.OrderMatchingEngine, trading.models.stock_market_listing.StockMarketListing, trading.models.limit_order.LimitOrder, trading.models.limit_order.LimitOrder, trading.models.market_order.MarketOrder, trading.models.market_order.MarketOrder]) -> pyannotate_runtime.collect_types.NoReturnType"
+        ],
+        "samples": 1
+    },
+    {
+        "path": "trading/tests/test_order_engine.py",
+        "line": 74,
+        "func_name": "test_add_sell_order",
+        "type_comments": [
+            "(Tuple[trading.models.order_matching_engine.OrderMatchingEngine, trading.models.stock_market_listing.StockMarketListing, trading.models.limit_order.LimitOrder, trading.models.limit_order.LimitOrder, trading.models.market_order.MarketOrder, trading.models.market_order.MarketOrder]) -> pyannotate_runtime.collect_types.NoReturnType"
+        ],
+        "samples": 1
+    },
+    {
+        "path": "trading/tests/test_order_engine.py",
+        "line": 80,
+        "func_name": "test_order_matching_limit_to_limit",
+        "type_comments": [
+            "(Tuple[trading.models.order_matching_engine.OrderMatchingEngine, trading.models.stock_market_listing.StockMarketListing, trading.models.limit_order.LimitOrder, trading.models.limit_order.LimitOrder, trading.models.market_order.MarketOrder, trading.models.market_order.MarketOrder]) -> pyannotate_runtime.collect_types.NoReturnType"
+        ],
+        "samples": 1
+    },
+    {
+        "path": "trading/tests/test_order_engine.py",
+        "line": 91,
+        "func_name": "test_order_matching_limit_to_market",
+        "type_comments": [
+            "(Tuple[trading.models.order_matching_engine.OrderMatchingEngine, trading.models.stock_market_listing.StockMarketListing, trading.models.limit_order.LimitOrder, trading.models.limit_order.LimitOrder, trading.models.market_order.MarketOrder, trading.models.market_order.MarketOrder]) -> pyannotate_runtime.collect_types.NoReturnType"
+        ],
+        "samples": 1
+    },
+    {
+        "path": "trading/tests/test_order_engine.py",
+        "line": 104,
+        "func_name": "test_order_matching_market_to_limit",
+        "type_comments": [
+            "(Tuple[trading.models.order_matching_engine.OrderMatchingEngine, trading.models.stock_market_listing.StockMarketListing, trading.models.limit_order.LimitOrder, trading.models.limit_order.LimitOrder, trading.models.market_order.MarketOrder, trading.models.market_order.MarketOrder]) -> pyannotate_runtime.collect_types.NoReturnType"
+        ],
+        "samples": 1
+    },
+    {
+        "path": "trading/tests/test_order_engine.py",
+        "line": 117,
+        "func_name": "test_order_matching_market_to_market",
+        "type_comments": [
+            "(Tuple[trading.models.order_matching_engine.OrderMatchingEngine, trading.models.stock_market_listing.StockMarketListing, trading.models.limit_order.LimitOrder, trading.models.limit_order.LimitOrder, trading.models.market_order.MarketOrder, trading.models.market_order.MarketOrder]) -> pyannotate_runtime.collect_types.NoReturnType"
+        ],
+        "samples": 1
+    },
+    {
+        "path": "trading/tests/test_order_engine.py",
+        "line": 128,
+        "func_name": "test_partial_fill",
+        "type_comments": [
+            "(Tuple[trading.models.order_matching_engine.OrderMatchingEngine, trading.models.stock_market_listing.StockMarketListing, trading.models.limit_order.LimitOrder, trading.models.limit_order.LimitOrder, trading.models.market_order.MarketOrder, trading.models.market_order.MarketOrder]) -> pyannotate_runtime.collect_types.NoReturnType"
+        ],
+        "samples": 1
+    },
+    {
+        "path": "trading/tests/test_order_engine.py",
+        "line": 141,
+        "func_name": "test_no_match",
+        "type_comments": [
+            "(Tuple[trading.models.order_matching_engine.OrderMatchingEngine, trading.models.stock_market_listing.StockMarketListing, trading.models.limit_order.LimitOrder, trading.models.limit_order.LimitOrder, trading.models.market_order.MarketOrder, trading.models.market_order.MarketOrder]) -> pyannotate_runtime.collect_types.NoReturnType"
+        ],
+        "samples": 1
+    },
+    {
+        "path": "trading/tests/test_order_engine.py",
+        "line": 150,
+        "func_name": "test_transaction_update",
+        "type_comments": [
+            "(Tuple[trading.models.order_matching_engine.OrderMatchingEngine, trading.models.stock_market_listing.StockMarketListing, trading.models.limit_order.LimitOrder, trading.models.limit_order.LimitOrder, trading.models.market_order.MarketOrder, trading.models.market_order.MarketOrder]) -> pyannotate_runtime.collect_types.NoReturnType"
+        ],
+        "samples": 1
+    },
+    {
+        "path": "trading/tests/test_order_engine.py",
+        "line": 160,
+        "func_name": "test_spread_in_market_orders",
+        "type_comments": [
+            "(Tuple[trading.models.order_matching_engine.OrderMatchingEngine, trading.models.stock_market_listing.StockMarketListing, trading.models.limit_order.LimitOrder, trading.models.limit_order.LimitOrder, trading.models.market_order.MarketOrder, trading.models.market_order.MarketOrder]) -> pyannotate_runtime.collect_types.NoReturnType"
+        ],
+        "samples": 1
+    }
+]

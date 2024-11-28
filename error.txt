@@ -1,0 +1,211 @@
+E   ImportError: cannot import name 'Client' from partially initialized module 'trading.models.client' (most likely due to a circular import) (/workspaces/TradingSystem/trading/models/client.py)
+________________________________________________________________________________________________________________________________ ERROR collecting trading/tests/test_market_maker.py _________________________________________________________________________________________________________________________________
+ImportError while importing test module '/workspaces/TradingSystem/trading/tests/test_market_maker.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/usr/local/python/3.12.1/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+trading/tests/test_market_maker.py:4: in <module>
+    from trading.models.client import Client
+trading/models/client.py:3: in <module>
+    from trading.models.stock_exchange import StockExchange
+trading/models/stock_exchange.py:2: in <module>
+    from trading.models.market_maker import MarketMaker
+trading/models/market_maker.py:4: in <module>
+    from trading.models.order_matching_engine import OrderMatchingEngine
+trading/models/order_matching_engine.py:8: in <module>
+    from trading.models.transaction import Transaction
+trading/models/transaction.py:3: in <module>
+    from trading.models.client import Client
+E   ImportError: cannot import name 'Client' from partially initialized module 'trading.models.client' (most likely due to a circular import) (/workspaces/TradingSystem/trading/models/client.py)
+________________________________________________________________________________________________________________________________ ERROR collecting trading/tests/test_order_engine.py _________________________________________________________________________________________________________________________________
+ImportError while importing test module '/workspaces/TradingSystem/trading/tests/test_order_engine.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/usr/local/python/3.12.1/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+trading/tests/test_order_engine.py:4: in <module>
+    from trading.models.client import Client
+trading/models/client.py:3: in <module>
+    from trading.models.stock_exchange import StockExchange
+trading/models/stock_exchange.py:2: in <module>
+    from trading.models.market_maker import MarketMaker
+trading/models/market_maker.py:4: in <module>
+    from trading.models.order_matching_engine import OrderMatchingEngine
+trading/models/order_matching_engine.py:8: in <module>
+    from trading.models.transaction import Transaction
+trading/models/transaction.py:3: in <module>
+    from trading.models.client import Client
+E   ImportError: cannot import name 'Client' from partially initialized module 'trading.models.client' (most likely due to a circular import) (/workspaces/TradingSystem/trading/models/client.py)
+============================================================================================================================================== short test summary info ===============================================================================================================================================
+ERROR trading/tests/test_client.py
+ERROR trading/tests/test_market_maker.py
+ERROR trading/tests/test_order_engine.py
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Interrupted: 3 errors during collection !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+================================================================================================================================================= 3 errors in 0.33s ==================================================================================================================================================
+@antoinebou12 ➜ /workspaces/TradingSystem (feature/fix_tests) $ python -m pytest
+================================================================================================================================================ test session starts =================================================================================================================================================
+platform linux -- Python 3.12.1, pytest-8.3.3, pluggy-1.5.0
+benchmark: 5.1.0 (defaults: timer=time.perf_counter disable_gc=False min_rounds=5 min_time=0.000005 max_time=1.0 calibration_precision=10 warmup=False warmup_iterations=100000)
+rootdir: /workspaces/TradingSystem
+configfile: pyproject.toml
+plugins: anyio-4.6.0, benchmark-5.1.0
+collected 20 items                                                                                                                                                                                                                                                                                                   
+
+trading/tests/test_client.py ..F                                                                                                                                                                                                                                                                               [ 15%]
+trading/tests/test_heaps.py .....                                                                                                                                                                                                                                                                              [ 40%]
+trading/tests/test_market_maker.py F.                                                                                                                                                                                                                                                                          [ 50%]
+trading/tests/test_order_engine.py ..F..FF..F                                                                                                                                                                                                                                                                  [100%]
+
+====================================================================================================================================================== FAILURES ======================================================================================================================================================
+__________________________________________________________________________________________________________________________________________________ test_order_flow ___________________________________________________________________________________________________________________________________________________
+
+setup_environment = (<trading.models.client.Client object at 0x78b7735d7710>, <trading.models.portfolio_stock.PortfolioStock object at 0x7...xchange object at 0x78b7735d7bf0>, <trading.models.order_matching_engine.OrderMatchingEngine object at 0x78b7735d7e30>)
+
+    def test_order_flow(setup_environment: Tuple[Client, PortfolioStock, Order, StockExchange, OrderMatchingEngine]) -> NoReturn:
+        _, _, order, stock_exchange, engine = setup_environment
+        order_flow = OrderFlow("TestOrderFlow")
+        order_flow.submit_order_ntimes(order, stock_exchange, 10)
+        total_orders = len(engine.buy_heapq.get_order_list()) + len(
+            engine.sell_heapq.get_order_list()
+        )
+>       assert total_orders == 10
+E       assert 0 == 10
+
+trading/tests/test_client.py:46: AssertionError
+------------------------------------------------------------------------------------------------------------------------------------------------ Captured stdout call ------------------------------------------------------------------------------------------------------------------------------------------------
+213257.17846346204
+Sell
+unimplemented Client(id=TestClients)  order type.
+254312.11012761935
+Buy
+unimplemented Client(id=TestClients)  order type.
+989818.9448684346
+Sell
+unimplemented Client(id=TestClients)  order type.
+463208.68595041643
+Sell
+unimplemented Client(id=TestClients)  order type.
+12366.589694733042
+Sell
+unimplemented Client(id=TestClients)  order type.
+868548.1069357108
+Sell
+unimplemented Client(id=TestClients)  order type.
+338167.11835524155
+Buy
+unimplemented Client(id=TestClients)  order type.
+859303.7345886343
+Buy
+unimplemented Client(id=TestClients)  order type.
+368366.9816271506
+Buy
+unimplemented Client(id=TestClients)  order type.
+888992.1750420851
+Buy
+unimplemented Client(id=TestClients)  order type.
+_________________________________________________________________________________________________________________________________________________ test_add_buy_order _________________________________________________________________________________________________________________________________________________
+
+setup_market = (<trading.models.stock_exchange.StockExchange object at 0x78b773624350>, <trading.models.market_maker.MarketMaker obje... <trading.models.assets.Assets object at 0x78b7736265a0>, <trading.models.client.Client object at 0x78b7736264e0>, ...)
+
+    def test_add_buy_order(setup_market: Tuple[StockExchange, MarketMaker, OrderMatchingEngine, Client, Assets, Client, Assets]) -> NoReturn:
+        stock_exchange, market_maker, _, _, _, _, _ = setup_market
+    
+        order = Order(
+            "AAPL",
+            100,
+            400,
+            "2021-01-01",
+            Client("ClientName"),
+            True,
+            Assets(PortfolioStock("AAPL", 10, 150.0, 120), 1000),
+        )
+        stock_exchange.submit_order(order)
+    
+        # Assert the order is in the buy heap
+>       assert order in market_maker.ordermatching_engine.buy_heapq.get_order_list()
+E       assert <trading.models.order.Order object at 0x78b773625940> in []
+E        +  where [] = get_order_list()
+E        +    where get_order_list = <trading.models.heaps.PriorityQueue object at 0x78b7736268d0>.get_order_list
+E        +      where <trading.models.heaps.PriorityQueue object at 0x78b7736268d0> = <trading.models.order_matching_engine.OrderMatchingEngine object at 0x78b7736263c0>.buy_heapq
+E        +        where <trading.models.order_matching_engine.OrderMatchingEngine object at 0x78b7736263c0> = <trading.models.market_maker.MarketMaker object at 0x78b773626840>.ordermatching_engine
+
+trading/tests/test_market_maker.py:55: AssertionError
+------------------------------------------------------------------------------------------------------------------------------------------------ Captured stdout call ------------------------------------------------------------------------------------------------------------------------------------------------
+unimplemented Client(id=ClientName)  order type.
+_________________________________________________________________________________________________________________________________________ test_order_matching_limit_to_limit _________________________________________________________________________________________________________________________________________
+
+setup_engine = (<trading.models.order_matching_engine.OrderMatchingEngine object at 0x78b773624290>, <trading.models.stock_market_lis...market_order.MarketOrder object at 0x78b773654050>, <trading.models.market_order.MarketOrder object at 0x78b773654290>)
+
+    def test_order_matching_limit_to_limit(setup_engine: Tuple[OrderMatchingEngine, StockMarketListing, LimitOrder, LimitOrder, MarketOrder, MarketOrder]) -> NoReturn:
+        engine, _, limit_order_buy, limit_order_sell, _, _ = setup_engine
+        engine.add_buy_order(limit_order_buy)
+        engine.add_sell_order(limit_order_sell)
+    
+        engine.match_orders()
+>       assert len(engine.transactions) == 1
+E       assert 0 == 1
+E        +  where 0 = len([])
+E        +    where [] = <trading.models.order_matching_engine.OrderMatchingEngine object at 0x78b773624290>.transactions
+
+trading/tests/test_order_engine.py:86: AssertionError
+________________________________________________________________________________________________________________________________________ test_order_matching_market_to_market ________________________________________________________________________________________________________________________________________
+
+setup_engine = (<trading.models.order_matching_engine.OrderMatchingEngine object at 0x78b773626f90>, <trading.models.stock_market_lis...market_order.MarketOrder object at 0x78b773626120>, <trading.models.market_order.MarketOrder object at 0x78b773626b40>)
+
+    def test_order_matching_market_to_market(setup_engine: Tuple[OrderMatchingEngine, StockMarketListing, LimitOrder, LimitOrder, MarketOrder, MarketOrder]) -> NoReturn:
+        engine, _, _, _, market_order_buy, market_order_sell = setup_engine
+        engine.add_buy_order(market_order_buy)
+        engine.add_sell_order(market_order_sell)
+    
+        engine.match_orders()
+        assert len(engine.transactions) == 1
+        transaction = engine.transactions[0]
+>       assert transaction.price == 152.50  # Midprice between the two market orders
+E       assert 155.0 == 152.5
+E        +  where 155.0 = <trading.models.transaction.Transaction object at 0x78b77360a5d0>.price
+
+trading/tests/test_order_engine.py:125: AssertionError
+_________________________________________________________________________________________________________________________________________________ test_partial_fill __________________________________________________________________________________________________________________________________________________
+
+setup_engine = (<trading.models.order_matching_engine.OrderMatchingEngine object at 0x78b773627b60>, <trading.models.stock_market_lis...market_order.MarketOrder object at 0x78b7736d3380>, <trading.models.market_order.MarketOrder object at 0x78b773609430>)
+
+    def test_partial_fill(setup_engine: Tuple[OrderMatchingEngine, StockMarketListing, LimitOrder, LimitOrder, MarketOrder, MarketOrder]) -> NoReturn:
+        engine, _, limit_order_buy, limit_order_sell, _, _ = setup_engine
+    
+        limit_order_buy.quantity = 5  # Adjust the buy order quantity
+        engine.add_buy_order(limit_order_buy)
+        engine.add_sell_order(limit_order_sell)
+    
+        engine.match_orders()
+>       assert len(engine.transactions) == 1
+E       assert 0 == 1
+E        +  where 0 = len([])
+E        +    where [] = <trading.models.order_matching_engine.OrderMatchingEngine object at 0x78b773627b60>.transactions
+
+trading/tests/test_order_engine.py:136: AssertionError
+____________________________________________________________________________________________________________________________________________ test_spread_in_market_orders ____________________________________________________________________________________________________________________________________________
+
+setup_engine = (<trading.models.order_matching_engine.OrderMatchingEngine object at 0x78b7736264b0>, <trading.models.stock_market_lis...market_order.MarketOrder object at 0x78b77360a5a0>, <trading.models.market_order.MarketOrder object at 0x78b773609a60>)
+
+    def test_spread_in_market_orders(setup_engine: Tuple[OrderMatchingEngine, StockMarketListing, LimitOrder, LimitOrder, MarketOrder, MarketOrder]) -> NoReturn:
+        engine, _, _, _, market_order_buy, market_order_sell = setup_engine
+        engine.add_buy_order(market_order_buy)
+        engine.add_sell_order(market_order_sell)
+    
+        engine.match_orders()
+        assert len(engine.transactions) == 1
+        transaction = engine.transactions[0]
+>       assert transaction.price == 152.50  # Midprice between market orders
+E       assert 155.0 == 152.5
+E        +  where 155.0 = <trading.models.transaction.Transaction object at 0x78b773654f20>.price
+
+trading/tests/test_order_engine.py:168: AssertionError
+============================================================================================================================================== short test summary info ===============================================================================================================================================
+FAILED trading/tests/test_client.py::test_order_flow - assert 0 == 10
+FAILED trading/tests/test_market_maker.py::test_add_buy_order - assert <trading.models.order.Order object at 0x78b773625940> in []
+FAILED trading/tests/test_order_engine.py::test_order_matching_limit_to_limit - assert 0 == 1
+FAILED trading/tests/test_order_engine.py::test_order_matching_market_to_market - assert 155.0 == 152.5
+FAILED trading/tests/test_order_engine.py::test_partial_fill - assert 0 == 1
+FAILED trading/tests/test_order_engine.py::test_spread_in_market_orders - assert 155.0 == 152.5
+============================================================================================================================================ 6 failed, 14 passed in 0.50s ============================================================================================================================================

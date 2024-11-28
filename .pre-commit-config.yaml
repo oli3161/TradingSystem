@@ -1,9 +1,36 @@
 repos:
   - repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: v0.8.0 
+    rev: v0.8.0
     hooks:
       - id: ruff
         name: ruff
         language: python
         entry: ruff check . --fix
+        types: [python]
+
+  - repo: https://github.com/psf/black
+    rev: 23.9.1
+    hooks:
+      - id: black
+        name: black
+        language: python
+        entry: black
+        types: [python]
+
+  - repo: https://github.com/pre-commit/mirrors-isort
+    rev: v5.12.0
+    hooks:
+      - id: isort
+        name: isort
+        language: python
+        entry: isort
+        types: [python]
+
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.5.1  
+    hooks:
+      - id: mypy
+        name: mypy
+        language: python
+        entry: mypy
         types: [python]
