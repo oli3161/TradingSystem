@@ -56,6 +56,14 @@ class PriorityQueue(ExecutionQueue):
         self.counter = count()  # Unique sequence count for each item
         self.is_min_heap = min_heap
 
+    def initialize_matching_state(self):
+
+        self.limit_orders_verified = False
+
+    def limit_orders_verified(self):
+        self.limit_orders_verified = True
+
+
     def push(self, order: Order):
         """Adds an order to the appropriate data structure."""
         if isinstance(order, LimitOrder):
