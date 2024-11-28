@@ -2,7 +2,6 @@ import asyncio
 from models import *
 from websockets.asyncio.server import serve, ServerConnection
 
-import asyncio
 import websockets
 
 class WebSocketServerRepository:

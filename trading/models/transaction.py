@@ -1,4 +1,3 @@
-from datetime import datetime
 
 class Transaction:
     def __init__(self, ticker, price, quantity, transaction_date, buyer, seller, transaction_type, total_value):

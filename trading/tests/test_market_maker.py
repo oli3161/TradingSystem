@@ -4,7 +4,6 @@ from trading.models.client import Client
 from trading.models.portfolio_stock import PortfolioStock
 from trading.models.assets import Assets
 from trading.models.stock_exchange import StockExchange
-from trading.models.market_maker import MarketMaker
 from trading.models.order import Order
 
 @pytest.fixture

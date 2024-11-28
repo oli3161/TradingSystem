@@ -4,8 +4,6 @@ from .market_order import MarketOrder
 from .stock_market_listing import StockMarketListing
 from .transaction import Transaction
 from datetime import datetime
-from .transaction_history import TransactionHistory
-from .heaps import ExecutionQueue
 from . heaps import PriorityQueue
 
 #TODO : Increment the money made by the engine with the spread when matching orders

@@ -4,7 +4,6 @@ from itertools import count
 from .limit_order import LimitOrder
 from .order import Order
 from abc import ABC, abstractmethod
-from .order import Order
 
 
 

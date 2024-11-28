@@ -4,7 +4,6 @@ from .order import Order
 from .stock_exchange import StockExchange
 from .portfolio_stock import PortfolioStock
 from .assets import Assets
-from .stock_exchange import StockExchange
 from .stock_market_listing import StockMarketListing
 from .order_matching_engine import OrderMatchingEngine
 from .market_maker import MarketMaker
