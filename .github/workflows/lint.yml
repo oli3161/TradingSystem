@@ -6,14 +6,13 @@ on:
   pull_request:
     branches: [main, feature/*]
 
-
-
 jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
         python-version: [3.12]
+        poetry-version: ["latest"]
 
     steps:
       - name: Checkout Repository
