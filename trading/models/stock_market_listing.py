@@ -1,5 +1,6 @@
 
 
+
 class StockMarketListing:
 
     def __init__(self, ticker_symbol, company_name, last_price):
