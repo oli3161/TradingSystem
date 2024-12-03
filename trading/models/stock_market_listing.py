@@ -1,4 +1,3 @@
-from models.orderbook import OrderBook
 
 
 class StockMarketListing:
@@ -9,7 +8,6 @@ class StockMarketListing:
         self.bid_price = last_price
         self.ask_price = last_price
         self.last_price = last_price
-        self.order_book : OrderBook = OrderBook()
 
 
 

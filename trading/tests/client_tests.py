@@ -1,10 +1,7 @@
 import sys
 
 
-
-
-
-sys.path.append('C:/A/ETS/AlgoETS/Simulateur/TradingSystem/TradingSystem/trading')  # Adjust to the actual path of the 'trading' folder
+sys.path.append('C:/Users/ogigu/OneDrive/Documents/Programming/Algo/TradingSystem/trading')  # Adjust to the actual path of the 'trading' folder
 
 import unittest
 from unittest.mock import Mock

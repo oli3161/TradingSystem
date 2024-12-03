@@ -4,7 +4,6 @@ from .market_order import MarketOrder
 from .stock_market_listing import StockMarketListing
 from .transaction import Transaction
 from datetime import datetime
-from .transaction_history import TransactionHistory
 from .heaps import ExecutionQueue
 from . heaps import PriorityQueue
 
@@ -41,14 +40,16 @@ class OrderMatchingEngine:
         """
         Matches buy and sell orders from the respective priority queues.
         """
+
         while not self.buy_heapq.is_empty() and not self.sell_heapq.is_empty():
             # Get the best buy and sell orders
             best_buy_order = self.buy_heapq.peek()
             best_sell_order = self.sell_heapq.peek()
 
             # Update bid and ask prices
-            self.stock_listing.update_bid_price(best_buy_order.price)
-            self.stock_listing.update_ask_price(best_sell_order.price)
+            #no already done in market_maker class
+            # self.stock_listing.update_bid_price(best_buy_order.price)
+            # self.stock_listing.update_ask_price(best_sell_order.price)
 
             # Check if orders can be matched
             if best_buy_order.price >= best_sell_order.price:
@@ -175,3 +176,7 @@ class OrderMatchingEngine:
         instant_sell_orders = self.instant_sell_orders
 
         return f"Best Bid: {best_bid} Best Ask: {best_ask} Instant Buy Orders: {instant_buy_orders} Instant Sell Orders: {instant_sell_orders}"
+    
+    def print_transactions(self):
+        for transaction in self.transactions:
+            print(transaction)
