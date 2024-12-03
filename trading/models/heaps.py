@@ -60,7 +60,7 @@ class PriorityQueue(ExecutionQueue):
 
         self.limit_orders_verified = False
 
-    def limit_orders_verified(self):
+    def limit_orders_is_verified(self):
         self.limit_orders_verified = True
 
 
@@ -113,6 +113,16 @@ class PriorityQueue(ExecutionQueue):
 
         # If prices are the same, compare order_date (FIFO for queue)
         return heap_top if heap_top.order_date <= queue_top.order_date else queue_top
+    
+    def vizualize(self):
+        self.vizualize_heap()
+        self.vizualize_market_order_queue()
+
+    def vizualize_heap(self):
+        print(self.heap)
+
+    def vizualize_market_order_queue(self):
+        print(self.market_order_queue)
 
     def is_empty(self):
         """Checks if the heap is empty."""
