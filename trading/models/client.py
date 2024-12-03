@@ -16,12 +16,12 @@ class Client:
         stock_exchange.submit_order(order)
 
 
-    def notify_completed_order(self,order : Order) :
+    def notify_completed_order(self,order : Order, verbose = False):
         
         self.portfolio.add_stock(order.asset.portfolio_stock)
 
-        #Verbose
-        print(order)
+        if verbose:
+            print(order)
 
     def __str__(self):
         return (f"Client(id={self.id})")
