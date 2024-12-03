@@ -7,8 +7,8 @@ import random
 
 class OrderFlow(Client):
 
-    def __init__(self):
-        Client.__init__(self)
+    def __init__(self,id):
+        Client.__init__(self,id)
 
     
         
@@ -20,20 +20,15 @@ class OrderFlow(Client):
             stock_exchange.submit_order(order)
 
 
-    def notify_completed_order(self,order : Order) :
-        
-        self.portfolio.add_stock(order.asset.portfolio_stock)
-
-        #Verbose
-        print(order)
-
-
     def randomize_quantity(self,order:Order):
         order.initial_quantity=random.uniform(0.0001, 1000000.0)
+        print(order.initial_quantity)
     
     def randomize_type(self,order:Order):
         type=random.randint(1,2)
         if(type==1):
-            order.order_type="Buy"
+            order.order_type=True
         else :
-            order.order_type="Sell"
+            order.order_type=False
+
+        print(order.order_type)

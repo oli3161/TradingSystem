@@ -1,61 +1,171 @@
 @startuml exchange_logic
 
 class Client{
-    +sendOrder(Order)
-    +orderFilled(Order)
+    + id : Portfolio
+    +submit_order(Order : order, StockExchange : stock_exchange)
+    +notify_completed_order(Order)
     +updatePortfolio()
 }
 
 class MarketMaker{
-+updateOrderPrice(Order)
+    + stock_listing : StockMarketListing
+    + ticker_symbol
+    + ordermatching_engine : OrderMatchingEngine
+    + smallest_increment
+    + volume_sensitivity 
+    + process_order(Order : order)
+    + adjust_order_price(Order : order)
 }
 
+class OrderFlow extends Client{
+    + submit_order_ntimes(Order : order, stock_exchange : StockExchange, n : int)
+    + randomize_quantity(Order : order)
+    + randomize_type(Order : order)
+}
 
 
 
 class OrderMatchingEngine{
-    +addOrder(Order)
-    +removeOrder(Order)
-    +getTopOrder()
-    -processOrders()
+    + spread
+    + money
+    + sell_heapq : Heaps
+    + buy_heapq : Heaps
+    + instant_buy_orders
+    + instant_sell_orders 
+    + stock_listing : StockMarketListing
+    + add_sell_order(Order : order)
+    + add_buy_order(Order : order)
+    + match_orders()
+    + match_market_orders(Order : sell_order, Order : buy_order)
+    + match_limit_market_order(Order : limit_order, Order : market_order)
+    + complete_transaction(Order : sell_order, Order : buy_order, price)
+
 }
 
 class Assets{
-
+    + portfolio_stock : PortfolioStock
+    + money_amount 
+    + add_stock()
+    + add_shares(quanity,price)
+    + remove_shares(quantity,price)
+    + add_money(amount)
+    + remove_money(amount)
 }
 
 class Heaps{
     
 }
 
+class LimitOrder extends Order{
+
+}
+
 
 
 class PortfolioStock{
+    + ticker_symbol
+    + shares_owned
+    + average_purchase_price
+    + market_price
+    + total_invested
+    + unrealized_gain_loss
+    + add_shares(quantity, price)
+    + remove_shares(quantity, price)
+
 }
 
-class Porfolio{
-
+class Portfolio{
+    + stocks : PortfolioStock[]
+    + add_stock(stock : PortfolioStock)
 }
 
 class StockExchange{
-
+    + name 
+    + stock_market_listing : {str,StockMarketListing}
+    + stock_marketMakers : {str,MarketMaker}
+    + submit_order(Order : order)
+    + getMarketMaker(ticker_symbol) : MarketMaker
+    + addStockMarketListing(ticker_symbol, company_name, last_price)
+    + match_orders()
 }
 
 class StockMarketListing{
-    
+    + ticker_symbol
+    + company_name
+    + bid_price
+    + ask_price
+    + last_price
+    + update_price(price)
+    + update_bid_price(price)
+    + update_ask_price(price)
+}
+
+class Transaction{
+    + ticker
+    + price 
+    + quantity
+    + transaction_date
+    + buyer 
+    + seller 
+    + transaction_type
+    + total_value 
+}
+
+class TransactionHistory{
+    + trasactions : Transaction[]
+    + add_trasaction(Transaction : transaction)
 }
 
 
 
 class Order{
-    -client : Client
-    +notifyOrderFilled()
+    + order_date
+    + order_status
+    + price
+    + ticker
+    + remaining_quantity
+    + initial_quantity
+    + client : Client
+    + order_type 
+    + asset : Assets 
+    + complete_order()
+    + add_shares(quantity,price)
+    + remove_shares(quantity,price)
+    + remove_money(amount)
+    + add_money(amount)
+    + decrease_quantity_traded(quantity)
 
 }
 
 
 
+Assets o-> PortfolioStock 
 
+Client ..> StockExchange : <<uses>>
+Client ..> Order : <<uses>>
+Client o-> Portfolio
+
+MarketMaker o--> OrderMatchingEngine
+MarketMaker o-> StockMarketListing
+MarketMaker ..> Order : <<uses>>
+
+OrderFlow ..> Order : <<uses>>
+
+OrderMatchingEngine o-> Heaps
+OrderMatchingEngine o--> StockMarketListing
+OrderMatchingEngine ..> Order : <<uses>>
+OrderMatchingEngine ..> Transaction : <<uses>> 
+OrderMatchingEngine ..> TransactionHistory : <<uses>>
+
+Order o-> Client
+Order o-> Assets
+
+Portfolio o-> PortfolioStock
+Portfolio ..> PortfolioStock
+
+StockExchange o-> StockMarketListing
+StockExchange o-> MarketMaker
+StockExchange ..> Order : <<uses>>
 
 
 
