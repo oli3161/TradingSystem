@@ -1,10 +1,16 @@
 import heapq
 from itertools import count
+from rich.console import Console
+from rich.table import Table
+from rich.panel import Panel
+from rich.box import DOUBLE_EDGE
 
 from .limit_order import LimitOrder
 from .order import Order
 from abc import ABC, abstractmethod
 from .order import Order
+from collections import Counter
+from tabulate import tabulate
 
 
 
@@ -114,15 +120,96 @@ class PriorityQueue(ExecutionQueue):
         # If prices are the same, compare order_date (FIFO for queue)
         return heap_top if heap_top.order_date <= queue_top.order_date else queue_top
     
-    def vizualize(self):
-        self.vizualize_heap()
+    def vizualize(self, ticker_symbol):
+        """
+        Visualizes the order book and market order queue with a title and ticker symbol.
+        
+        Args:
+            ticker_symbol (str): The symbol of the stock or asset being visualized.
+        """
+        # Determine the title based on whether this is a buy or sell heap
+        order_type = "Sell" if self.is_min_heap else "Buy"
+        print(f"==== {order_type} Order Book for {ticker_symbol} ====")
+        print()
+
+        # Visualize heap and market order queue
+        self.vizualize_heap(ticker_symbol)
         self.vizualize_market_order_queue()
 
-    def vizualize_heap(self):
-        print(self.heap)
+    def vizualize_heap(self, ticker_symbol):
+        """
+        Visualizes the heap with dynamic price colors (green for Buy, red for Sell),
+        white for the number of orders, and the total quantity at each price level,
+        using styled tables and a large title.
+
+        Args:
+            ticker_symbol (str): The symbol of the stock or asset being visualized.
+        """
+        console = Console()
+
+        # Title: Buy or Sell Order Book
+        order_type = "Buy" if self.is_min_heap else "Sell"
+        title_text = f"[bold blue]{order_type} Order Book for {ticker_symbol}[/bold blue]"
+        console.print(Panel(title_text, expand=True, style="bold cyan"))
+
+        # Check if heap is empty
+        if not self.heap:
+            console.print("[bold red]Order Book (Heap) is empty.[/bold red]", style="bold")
+            return
+
+        # Aggregate data for price levels
+        price_data = {}
+        for _, _, order in self.heap:
+            if order.price not in price_data:
+                price_data[order.price] = {"count": 0, "quantity": 0}
+            price_data[order.price]["count"] += 1
+            price_data[order.price]["quantity"] += order.remaining_quantity
+
+        # Determine price color based on order type
+        price_color = "green bold" if self.is_min_heap else "red bold"
+
+        # Create a table with rich styling
+        table = Table(title="", box=DOUBLE_EDGE, title_style="bold green")
+        table.add_column("Price Level", justify="right", style=price_color)
+        table.add_column("Number of Orders", justify="right", style="white bold")
+        table.add_column("Total Quantity", justify="right", style="cyan bold")
+
+        # Add rows to the table
+        for price, data in sorted(price_data.items(), reverse=not self.is_min_heap):
+            table.add_row(f"{price:.2f}", str(data["count"]), str(data["quantity"]))
+
+        # Print the table
+        console.print(table)
+
+
 
     def vizualize_market_order_queue(self):
-        print(self.market_order_queue)
+        """
+        Visualizes the market order queue with colors and boxes.
+        """
+        console = Console()
+
+        if not self.market_order_queue:
+            console.print("[bold red]Market Order Queue is empty.[/bold red]", style="bold")
+            return
+
+        # Count the total number of market orders
+        total_market_orders = len(self.market_order_queue)
+
+        
+        unique_prices = self.market_order_queue[0].price if self.market_order_queue else 0
+
+        # Create a table with rich styling
+        table = Table(title="Market Order Queue Summary", box=DOUBLE_EDGE, title_style="bold cyan")
+        table.add_column("Metric", justify="left", style="green bold", no_wrap=True)
+        table.add_column("Value", justify="left", style="bold white")
+
+        # Add rows to the table
+        table.add_row("Number of Market Orders", str(total_market_orders))
+        table.add_row("Associated Prices", " ",str(unique_prices))
+
+        # Print the table
+        console.print(table)
 
     def is_empty(self):
         """Checks if the heap is empty."""
