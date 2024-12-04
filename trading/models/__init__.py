@@ -6,9 +6,10 @@ from .portfolio_stock import PortfolioStock
 from .assets import Assets
 from .stock_exchange import StockExchange
 from .stock_market_listing import StockMarketListing
-from .order_matching_engine import OrderMatchingEngine
+from .OrderEngine.order_engine import OrderEngine
+from .OrderEngine.order_matching_engine import OrderMatchingEngine
 from .market_maker import MarketMaker
 from .order_flow import OrderFlow
 from .limit_order import LimitOrder
 from .market_order import MarketOrder
-from .heaps import PriorityQueue
+from .Heaps.priority_queue import PriorityQueue

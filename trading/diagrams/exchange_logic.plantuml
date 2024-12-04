@@ -23,23 +23,31 @@ class OrderFlow extends Client{
     + randomize_type(Order : order)
 }
 
+package engine {
 
 
-class OrderMatchingEngine{
-    + spread
-    + money
-    + sell_heapq : Heaps
-    + buy_heapq : Heaps
-    + instant_buy_orders
-    + instant_sell_orders 
-    + stock_listing : StockMarketListing
-    + add_sell_order(Order : order)
-    + add_buy_order(Order : order)
-    + match_orders()
-    + match_market_orders(Order : sell_order, Order : buy_order)
-    + match_limit_market_order(Order : limit_order, Order : market_order)
-    + complete_transaction(Order : sell_order, Order : buy_order, price)
 
+    abstract class OrderEngine{
+        + sell_heapq : Heaps
+        + buy_heapq : Heaps
+        + instant_buy_orders
+        + instant_sell_orders 
+        + stock_listing : StockMarketListing
+        + add_sell_order(Order : order)
+        + add_buy_order(Order : order)
+        + {abstract} match_orders()
+        + {abstract} complete_transaction(Order : sell_order, Order : buy_order, price)
+    }
+
+    class OrderMatchingEngine extends OrderEngine{
+        + spread
+        + money
+        + match_orders()
+        + match_market_orders(Order : sell_order, Order : buy_order)
+        + match_limit_market_order(Order : limit_order, Order : market_order)
+        + complete_transaction(Order : sell_order, Order : buy_order, price)
+
+    }
 }
 
 class Assets{
@@ -51,10 +59,37 @@ class Assets{
     + add_money(amount)
     + remove_money(amount)
 }
+package Heaps {
+    abstract class ExecutionQueue{
+    + min_heap : Boolean
+    + {abstract} push(order : Order)
+    + {abstract} pop() : Order
+    + {abstract} peek() : Order 
+    + {abstract} get_order_list()
+    + {abstract} is_empty()
 
-class Heaps{
-    
+    }
+
+    class PriorityQueue extends ExecutionQueue{
+        + heap : []
+        + market_order_queue : []
+        + count 
+        + is_min_heap
+        + initialize_matching_state()
+        + limit_orders_is_verified()
+        + push(order : Order)
+        + pop() : Order
+        + peek() : Order
+        + _get_best_order()
+        + vizualize(ticker_symbol)
+        + vizualize_heap(ticker_symbol)
+        + vizualize_market_order_queue()
+        + isEmpty()
+        + get_order_list()
+        + size()
+    }
 }
+
 
 class LimitOrder extends Order{
 
@@ -151,7 +186,7 @@ MarketMaker ..> Order : <<uses>>
 
 OrderFlow ..> Order : <<uses>>
 
-OrderMatchingEngine o-> Heaps
+OrderMatchingEngine o-> PriorityQueue
 OrderMatchingEngine o--> StockMarketListing
 OrderMatchingEngine ..> Order : <<uses>>
 OrderMatchingEngine ..> Transaction : <<uses>> 

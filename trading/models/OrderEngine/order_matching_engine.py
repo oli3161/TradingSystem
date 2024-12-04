@@ -1,39 +1,24 @@
-from .order import Order
-from .limit_order import LimitOrder
-from .market_order import MarketOrder
-from .stock_market_listing import StockMarketListing
-from .transaction import Transaction
+from .order_engine import OrderEngine
+from ..order import Order
+from ..limit_order import LimitOrder
+from ..market_order import MarketOrder
+from ..stock_market_listing import StockMarketListing
+from ..transaction import Transaction
 from datetime import datetime
-from .heaps import ExecutionQueue
-from . heaps import PriorityQueue
 
 #TODO : Increment the money made by the engine with the spread when matching orders
 #TODO : Switch the spread and money logic to the MarketMaker class
-class OrderMatchingEngine:
+
+
+class OrderMatchingEngine(OrderEngine):
 
     spread = 0.02
     money = 0
 
 
     def __init__(self,stock_listing :StockMarketListing):
-        
-        self.sell_heapq = PriorityQueue(min_heap=True)
-        self.buy_heapq = PriorityQueue(min_heap=False)
-
-        self.instant_buy_orders = 0
-        self.instant_sell_orders = 0
-
-        self.stock_listing = stock_listing
-        self.transactions : list[Transaction] = []
-
-    def add_sell_order(self, order : Order):
-        
-        self.sell_heapq.push(order)
-        
-
-    def add_buy_order(self, order : Order):
-        
-        self.buy_heapq.push(order)
+        OrderEngine.__init__(self,stock_listing)
+    
         
 
     def match_orders(self):

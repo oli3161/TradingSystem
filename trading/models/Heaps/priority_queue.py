@@ -5,47 +5,10 @@ from rich.table import Table
 from rich.panel import Panel
 from rich.box import DOUBLE_EDGE
 
-from .limit_order import LimitOrder
-from .order import Order
-from abc import ABC, abstractmethod
-from .order import Order
-from collections import Counter
-from tabulate import tabulate
+from .execution_queue import ExecutionQueue
 
-
-
-class ExecutionQueue(ABC):
-    """Abstract class defining the interface for order heap implementations."""
-
-    def __init__(self,min_heap=True):
-        self.min_heap = min_heap
-        
-    
-    @abstractmethod
-    def push(self, order: Order):
-        """Adds an order to the heap."""
-        pass
-
-    @abstractmethod
-    def pop(self) -> Order:
-        """Removes and returns the highest/lowest priority order."""
-        pass
-
-    @abstractmethod
-    def peek(self) -> Order:
-        """Returns the highest/lowest priority order without removing it."""
-        pass
-
-    @abstractmethod
-    def get_order_list(self):
-        """Returns all orders in the heap as a list."""
-        pass
-
-    @abstractmethod
-    def is_empty(self) -> bool:
-        """Checks if the heap is empty."""
-        pass
-
+from ..limit_order import LimitOrder
+from ..order import Order
 
 
 class PriorityQueue(ExecutionQueue):
@@ -57,6 +20,7 @@ class PriorityQueue(ExecutionQueue):
             min_heap (bool): If True, behaves as a min-heap (ascending order by price).
                                 If False, behaves as a max-heap (descending order by price).
         """
+        ExecutionQueue.__init__(self)
         self.heap = []
         self.market_order_queue = []
         self.counter = count()  # Unique sequence count for each item
