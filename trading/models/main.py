@@ -1,5 +1,5 @@
 import sys
-
+import time
 
 sys.path.append('C:/Users/ogigu/OneDrive/Documents/Programming/Algo/TradingSystem/trading')  # Adjust to the actual path of the 'trading' folder
 
@@ -9,26 +9,40 @@ from models import *
 exchange = StockExchange('NYSE')
 exchange.addStockMarketListing("AAPL", "Apple Inc.", 155.00)
 
-# Create mock clients and assets
+# # Create mock clients and assets
 client1_assets = Assets(PortfolioStock("AAPL", 50, 150.00, 160.00), 5000)
 client2_assets = Assets(PortfolioStock("AAPL", 30, 140.00, 160.00), 3000)
 
 client1 = client1_assets
 client2 = client2_assets
 
-# Create limit and market orders
-limit_order_buy = LimitOrder("AAPL", price=150.00, quantity=10, client=Client(1), buy_order=True, assets= client1)
-limit_order_sell = LimitOrder("AAPL", price=155.00, quantity=5, client=Client(2), buy_order=False, assets= client2)
-market_order_buy = MarketOrder("AAPL", price=155.00, quantity=5, client=Client(1), buy_order=True, assets= client1)
-market_order_sell = MarketOrder("AAPL", price=150.00, quantity=5, client=Client(2), buy_order=False, assets= client2)
+# Create OrderFlow instances
+order_flow1 = OrderFlow(1)
+order_flow2 = OrderFlow(2)
+
+
+# Function to simulate stock market ticks
+def simulate_market_ticks(stock_exchange : StockExchange, order_flow1 : OrderFlow, order_flow2 : OrderFlow, duration):
+    start_time = time.time()
+    while time.time() - start_time < duration:
+        # Randomly create limit and market orders
+        limit_order = LimitOrder("AAPL", price=150.00, quantity=10, client=Client(1), buy_order=True, assets=client1)
+        market_order = MarketOrder("AAPL", price=155.00, quantity=5, client=Client(2), buy_order=False, assets=client2)
+        stock_exchange.getStockMarketListing("AAPL").visualize_ticker()
+        
+        # Randomize and submit orders
+        order_flow1.submit_order_ntimes(limit_order, stock_exchange, 1, 140.00, 160.00)
+        order_flow2.submit_order_ntimes(market_order, stock_exchange, 1, 140.00, 160.00)
+        
+        
+        # Match orders and print transactions
+        engine = stock_exchange.getMarketMaker("AAPL").ordermatching_engine
+        engine.match_orders()
+
+        # Wait for 1 second before the next tick
+        time.sleep(1)
 
 
 
-exchange.submit_order(limit_order_buy)
-exchange.submit_order(limit_order_sell)
-exchange.submit_order(market_order_buy)
-exchange.submit_order(market_order_sell)
-
-engine = exchange.getMarketMaker("AAPL").ordermatching_engine
-engine.match_orders()
-engine.print_transactions()
+# Simulate market for 60 seconds
+simulate_market_ticks(exchange, order_flow1, order_flow2, 60)
