@@ -34,6 +34,9 @@ class StockExchange:
 
         self.stock_market_listings[stock_market_listing.ticker_symbol] = stock_market_listing
 
+    def getStockMarketListing(self,ticker_symbol) -> StockMarketListing:
+        return self.stock_market_listings.get(ticker_symbol,'Key not found')
+
     def match_orders(self):
 
         for marketMaker in self.stock_marketMakers.values():

@@ -31,7 +31,12 @@ class PortfolioStock:
 
         self.total_invested -= new_value
         self.shares_owned -= quantity
-        self.average_purchase_price = self.total_invested / self.shares_owned
+        if self.shares_owned != 0:
+            
+            self.average_purchase_price = self.total_invested / self.shares_owned
+        else :
+            self.average_purchase_price = 0
+            
         self.unrealized_gain_loss = (self.market_price - self.average_purchase_price) * self.shares_owned
 
         return quantity
