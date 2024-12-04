@@ -1,6 +1,5 @@
 # from .client import Client
 from .assets import Assets
-import random
 from datetime import datetime
 
 
@@ -62,7 +61,7 @@ class Order :
 
     def __str__(self):
         return (f"Order(ticker={self.ticker}, price={self.price}, quantity={self.initial_quantity}, "
-                f"order_date={self.order_date}, client={self.client}, order_type={self.order_type}, "
+                f"order_date={self.order_date}, client={self.client}, "
                 f"order_status={self.order_status}, asset={self.asset})")
     
 
