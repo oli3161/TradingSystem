@@ -1,9 +1,10 @@
 import asyncio
-from models import *
-from websockets.asyncio.server import serve, ServerConnection
 
-import asyncio
 import websockets
+from websockets.asyncio.server import ServerConnection, serve
+
+from models import Assets, Client, LimitOrder, PortfolioStock, StockExchange
+
 
 class WebSocketServerRepository:
     connections: dict[str, ServerConnection]
@@ -12,7 +13,9 @@ class WebSocketServerRepository:
         self.connections = {}
 
     def add_connection(self, websocket: ServerConnection, username: str):
-        identifier = f"{username}@{websocket.remote_address[0]}:{websocket.remote_address[1]}"
+        identifier = (
+            f"{username}@{websocket.remote_address[0]}:{websocket.remote_address[1]}"
+        )
 
         self.connections[identifier] = websocket
 
@@ -30,10 +33,11 @@ class WebSocketServerRepository:
     async def send_message(self, identifier, message):
         if identifier not in self.connections:
             return
-        
+
         websocket = self.connections[identifier]
 
         await websocket.send(message)
+
 
 class WebSocketServer:
     host: str
@@ -44,7 +48,14 @@ class WebSocketServer:
     client_repo: WebSocketServerRepository
     exchange: StockExchange
 
-    def __init__(self, exchange: StockExchange, client: Client, client_assets: Assets, host = "0.0.0.0", port = 8765):
+    def __init__(
+        self,
+        exchange: StockExchange,
+        client: Client,
+        client_assets: Assets,
+        host="0.0.0.0",
+        port=8765,
+    ):
         self.host = host
         self.port = port
 
@@ -55,7 +66,7 @@ class WebSocketServer:
 
     async def serve_forever(self):
         async with serve(self.handle_client, self.host, self.port) as server:
-            print("WSS running on 0.0.0.0:8765");
+            print("WSS running on 0.0.0.0:8765")
             await server.serve_forever()
 
     async def handle_client(self, websocket: ServerConnection):
@@ -74,7 +85,7 @@ class WebSocketServer:
         try:
             async for message in websocket:
                 self.handle_message(str(message))
-        
+
         except websockets.exceptions.ConnectionClosedError as e:
             print(f"Connection with {identifier} closed unexpectedly: {e}")
         except Exception as e:
@@ -99,7 +110,7 @@ class WebSocketServer:
                 is_buy = False
             case _:
                 return
-        
+
         if stock != "AAPL":
             return
 
@@ -113,7 +124,9 @@ class WebSocketServer:
         if price != price:
             return
 
-        order = LimitOrder(stock,price,quantity,self.client, is_buy,self.client_assets)
+        order = LimitOrder(
+            stock, price, quantity, self.client, is_buy, self.client_assets
+        )
         print(message)
 
         self.exchange.submit_order(order)
@@ -121,8 +134,9 @@ class WebSocketServer:
         engine = self.exchange.getMarketMaker("AAPL").ordermatching_engine
         engine.match_orders()
 
+
 async def main():
-    exchange = StockExchange('NYSE')
+    exchange = StockExchange("NYSE")
     exchange.addStockMarketListing("AAPL", "Apple Inc.", 155.00)
 
     client_assets = Assets(PortfolioStock("AAPL", 50), 5000)
@@ -131,6 +145,7 @@ async def main():
     server = WebSocketServer(exchange, client, client_assets)
 
     await server.serve_forever()
+
 
 if __name__ == "__main__":
     asyncio.run(main())
