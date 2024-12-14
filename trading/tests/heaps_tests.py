@@ -104,6 +104,7 @@ class TestPriorityQueue(unittest.TestCase):
         self.max_heap_queue.push(market_order1)
 
         print(self.max_heap_queue.peek())
+        self.max_heap_queue.limit_orders_verified()
         print(self.max_heap_queue.peek())
 
         

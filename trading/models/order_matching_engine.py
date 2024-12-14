@@ -50,7 +50,9 @@ class OrderMatchingEngine:
             best_buy_order = self.buy_heapq.peek()
             best_sell_order = self.sell_heapq.peek()
 
-            
+            if best_buy_order is None or best_sell_order is None:
+                break
+
             # Update bid and ask prices
             #no already done in market_maker class
             # self.stock_listing.update_bid_price(best_buy_order.price)
@@ -94,7 +96,7 @@ class OrderMatchingEngine:
 
         self.complete_transaction(sell_order,buy_order,midprice)        
 
-
+    #TODO Add verification that the market Order has enough money in the assets to buy the shares, if not, remove order and change status to cancelled
     #Used to match a limit order with a market order
     def match_limit_market_orders(self, limit_order: Order, market_order: Order):
         """
@@ -138,15 +140,15 @@ class OrderMatchingEngine:
         else:
                 trade_quantity = sell_order_quantity
 
-        
-        #Transfer the shares first
-        sellers_shares = sell_order.remove_shares(trade_quantity,price)
-        
-        buy_order.add_shares(sellers_shares,price)
-
-        #Transfer the money value
+         #Transfer the money first value
         money_value = buy_order.remove_money(trade_quantity * price)
         sell_order.asset.add_money(money_value)
+        
+        #Transfer the shares
+        sellers_shares = sell_order.remove_shares(trade_quantity,price)
+        buy_order.add_shares(sellers_shares,price)
+
+       
 
         #Update the price of the stock_listing
         self.stock_listing.update_price(price)

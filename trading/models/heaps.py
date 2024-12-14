@@ -4,7 +4,7 @@ from rich.console import Console
 from rich.table import Table
 from rich.panel import Panel
 from rich.box import DOUBLE_EDGE
-
+from typing import List
 from .limit_order import LimitOrder
 from .order import Order
 from abc import ABC, abstractmethod
@@ -58,7 +58,7 @@ class PriorityQueue(ExecutionQueue):
                                 If False, behaves as a max-heap (descending order by price).
         """
         self.heap = []
-        self.market_order_queue = []
+        self.market_order_queue  = []
         self.counter = count()  # Unique sequence count for each item
         self.is_min_heap = min_heap
         self.limit_orders_checked = False
@@ -83,10 +83,24 @@ class PriorityQueue(ExecutionQueue):
             # If it's a market order, add it to the queue
             self.market_order_queue.append(order)
 
+    def push(self, order: Order):
+        """Adds an order to the appropriate data structure."""
+        if isinstance(order, LimitOrder):
+            # If it's a limit order, push it to the heap
+            price = order.price if self.is_min_heap else -order.price  # Adjust price for heap behavior
+            heapq.heappush(self.heap, (price, next(self.counter), order))
+        else:
+            # If it's a market order, add it to the queue
+            self.market_order_queue.append(order)
+
     def pop(self) -> Order:
         """Removes and returns the best order according to the conditions."""
         if self.is_empty():
             raise IndexError("pop from an empty priority queue")
+    
+        # Ensure that we skip cancelled orders
+        while self.heap and self.heap[0][2].is_cancelled():  # Check if the top order is cancelled
+            heapq.heappop(self.heap)  # Remove the cancelled order
 
         best_order = self._get_best_order()
         if best_order in self.market_order_queue:
@@ -94,13 +108,6 @@ class PriorityQueue(ExecutionQueue):
         else:
             heapq.heappop(self.heap)  # Remove the top element from the heap
         return best_order
-
-    def peek(self) -> Order:
-        """Returns the best order according to the conditions without removing it."""
-        if self.is_empty():
-            raise IndexError("peek from an empty priority queue")
-
-        return self._get_best_order()
 
     def _get_best_order(self):
         """Determines the best order between the heap and market order queue."""
