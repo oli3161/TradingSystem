@@ -50,6 +50,10 @@ class Order :
 
         return money
     
+    def notify_order_cancelled(self,reason):
+        
+        print(f"Order {self} was cancelled because {reason}")
+    
 
     def add_money(self, amount):
         self.asset.add_money(amount)

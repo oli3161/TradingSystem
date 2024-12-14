@@ -61,13 +61,16 @@ class PriorityQueue(ExecutionQueue):
         self.market_order_queue = []
         self.counter = count()  # Unique sequence count for each item
         self.is_min_heap = min_heap
+        self.limit_orders_checked = False
+        self.best_orders_verified = False
 
     def initialize_matching_state(self):
 
-        self.limit_orders_verified = False
+        self.limit_orders_checked = False
+        self.best_orders_verified = False
 
-    def limit_orders_is_verified(self):
-        self.limit_orders_verified = True
+    def limit_orders_verified(self):
+        self.limit_orders_checked = True
 
 
     def push(self, order: Order):
@@ -103,6 +106,10 @@ class PriorityQueue(ExecutionQueue):
         """Determines the best order between the heap and market order queue."""
         heap_top = self.heap[0][2] if self.heap else None  # Get order from heap (price, counter, order)
         queue_top = self.market_order_queue[0] if self.market_order_queue else None  # Get first market order
+
+        #If limit orders have been checked, return the best market order
+        if self.limit_orders_checked:
+            return queue_top
 
         # If only one exists, return it as the best
         if heap_top and not queue_top:
@@ -210,6 +217,13 @@ class PriorityQueue(ExecutionQueue):
 
         # Print the table
         console.print(table)
+
+    def top_orders_verified(self):
+        
+        if not self.is_empty() and not self.best_orders_verified:
+            return False
+        else:
+            return True
 
     def is_empty(self):
         """Checks if the heap is empty."""

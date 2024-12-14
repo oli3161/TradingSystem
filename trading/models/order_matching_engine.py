@@ -40,9 +40,10 @@ class OrderMatchingEngine:
         """
         Matches buy and sell orders from the respective priority queues.
         """
-        
+        self.buy_heapq.initialize_matching_state()
+        self.sell_heapq.initialize_matching_state()
 
-        while not self.buy_heapq.is_empty() and not self.sell_heapq.is_empty():
+        while not self.buy_heapq.top_orders_verified() and not self.sell_heapq.top_orders_verified():
             
             
             # Get the best buy and sell orders
@@ -71,7 +72,10 @@ class OrderMatchingEngine:
 
             else:
                 # No matching possible for current best orders
-                break
+                if  isinstance(best_buy_order,LimitOrder):
+                    self.buy_heapq.limit_orders_verified()
+                if  isinstance(best_sell_order,LimitOrder):
+                    self.sell_heapq.limit_orders_verified()
            
 
     #Used to match two market orders with prices that are far from each other

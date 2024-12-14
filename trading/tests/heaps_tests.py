@@ -90,6 +90,28 @@ class TestPriorityQueue(unittest.TestCase):
         best_order = self.max_heap_queue.peek()
         self.assertEqual(best_order, market_order1, "Market orders should be prioritized by arrival time in max-heap as well.")
 
+    
+    def test_limit_market_order_matching(self):
+        """Test matching of limit and market orders in the queue."""
+
+        limit_order1 = LimitOrder("AAPL", price=155.00, quantity=10, client=client1, buy_order=True, assets=client1_assets)
+        
+
+        market_order1 = MarketOrder("AAPL", price=150.01, quantity=8, client=client1, buy_order=True, assets=client1_assets)
+        
+
+        self.max_heap_queue.push(limit_order1)
+        self.max_heap_queue.push(market_order1)
+
+        print(self.max_heap_queue.peek())
+        print(self.max_heap_queue.peek())
+
+        
+
+        # # Matching should occur between the limit and market orders
+        # self.assertEqual(self.min_heap_queue.size(), 1, "Matching should remove orders from the queue.")
+        # self.assertEqual(self.max_heap_queue.size(), 1, "Matching should remove orders from the queue.")
+
 if __name__ == "__main__":
     unittest.main()
 
