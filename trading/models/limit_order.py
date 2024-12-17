@@ -11,6 +11,6 @@ class LimitOrder(Order) :
         self.limit_price = price
 
     def __str__(self):
-        return (f"Order(ticker={self.ticker}, price={self.price}, quantity={self.initial_quantity}, "
+        return (f"Order(ticker={self.ticker}, price={self.price}, quantity={self.initial_quantity}, remaining_quantity={self.remaining_quantity}, "
                 f"order_date={self.order_date}, client={self.client}, order_type= Limit Order, "
                 f"order_status={self.order_status}, asset={self.asset})")

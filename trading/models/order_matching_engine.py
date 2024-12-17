@@ -53,15 +53,12 @@ class OrderMatchingEngine:
             if best_buy_order is None or best_sell_order is None:
                 break
 
-            # Update bid and ask prices
-            #no already done in market_maker class
-            # self.stock_listing.update_bid_price(best_buy_order.price)
-            # self.stock_listing.update_ask_price(best_sell_order.price)
+            
 
-            # Check if orders can be matched
-            if best_buy_order.price >= best_sell_order.price:
+            # Check if orders can be matched if both are limit orders
+            if isinstance(best_buy_order, LimitOrder) and isinstance(best_sell_order, LimitOrder) and best_buy_order.price >= best_sell_order.price:
                 # Match buy and sell orders
-                self.complete_transaction(best_sell_order, best_buy_order, best_buy_order.price)
+                self.match_limit_market_orders(best_buy_order, best_sell_order)
 
             elif isinstance(best_buy_order, LimitOrder) and isinstance(best_sell_order, MarketOrder):
                 self.match_limit_market_orders(best_buy_order, best_sell_order)
@@ -70,7 +67,7 @@ class OrderMatchingEngine:
                 self.match_limit_market_orders(best_sell_order, best_buy_order)
 
             elif isinstance(best_buy_order, MarketOrder) and isinstance(best_sell_order, MarketOrder):
-                self.match_market_orders(best_buy_order, best_sell_order)
+                self.match_market_orders(best_sell_order,best_buy_order)
 
             else:
                 # No matching possible for current best orders
@@ -79,6 +76,14 @@ class OrderMatchingEngine:
                 if  isinstance(best_sell_order,LimitOrder):
                     self.sell_heapq.limit_orders_verified()
            
+
+    def match_limit_orders(self,buy_order : Order,sell_order : Order):
+
+        transaction_price = sell_order.price
+
+        self.complete_transaction(sell_order,buy_order,transaction_price)
+        
+
 
     #Used to match two market orders with prices that are far from each other
     def match_market_orders(self,sell_order : Order,buy_order : Order):
@@ -137,16 +142,18 @@ class OrderMatchingEngine:
             trade_quantity = min(sell_order_quantity,buy_order_quantity)
 
         #If the quantities are equal, we can just transfer the shares and money
-        else:
+        else: 
                 trade_quantity = sell_order_quantity
 
-         #Transfer the money first value
-        money_value = buy_order.remove_money(trade_quantity * price)
-        sell_order.asset.add_money(money_value)
+     
         
         #Transfer the shares
         sellers_shares = sell_order.remove_shares(trade_quantity,price)
         buy_order.add_shares(sellers_shares,price)
+
+        #Transfer the money first value
+        money_value = buy_order.remove_money(trade_quantity * price)
+        sell_order.asset.add_money(money_value)
 
        
 
