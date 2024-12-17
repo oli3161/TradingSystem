@@ -82,16 +82,17 @@ class PriorityQueue(ExecutionQueue):
         else:
             # If it's a market order, add it to the queue
             self.market_order_queue.append(order)
+    
+    def peek(self) -> Order:
+        """Returns the best order according to the conditions without removing it."""
+        if self.is_empty():
+            raise IndexError("peek from an empty priority queue")
+        
+        # Ensure that we skip canceled orders
+        while self.heap and self.heap[0][2].is_cancelled():  # Check if the top order is canceled
+            heapq.heappop(self.heap)  # Remove the canceled order
 
-    def push(self, order: Order):
-        """Adds an order to the appropriate data structure."""
-        if isinstance(order, LimitOrder):
-            # If it's a limit order, push it to the heap
-            price = order.price if self.is_min_heap else -order.price  # Adjust price for heap behavior
-            heapq.heappush(self.heap, (price, next(self.counter), order))
-        else:
-            # If it's a market order, add it to the queue
-            self.market_order_queue.append(order)
+        return self._get_best_order()
 
     def pop(self) -> Order:
         """Removes and returns the best order according to the conditions."""
