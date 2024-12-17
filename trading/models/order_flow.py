@@ -12,30 +12,33 @@ class OrderFlow(Client):
     def __init__(self, id):
         Client.__init__(self, id)
 
-    def submit_order_ntimes(self, order: Order, stock_exchange: StockExchange, n: int, min_price, max_price):
+    def submit_random_orders(self, stock_exchange: StockExchange, n: int, min_price, max_price, ticker: str):
         for i in range(n):
-            self.randomize_quantity(order)
-            self.randomize_price(order,min_price,max_price)
-            self.randomize_type(order)
+            order = self.create_random_order(min_price, max_price, ticker)
             stock_exchange.submit_order(order)
 
-    def randomize_quantity(self, order: Order):
-        order.initial_quantity = random.uniform(1, 10000.0)
-        
+    def create_random_order(self, min_price, max_price, ticker: str):
+        fake_client = Client(id=random.randint(1, 1000))
+        buy_order = random.choice([True, False])
+        order_type = random.choice([LimitOrder, MarketOrder])
+        order = order_type(
+            ticker=ticker,
+            price=random.uniform(min_price, max_price),
+            quantity=random.randint(1, 100),
+            client=fake_client,
+            buy_order=buy_order,
+            assets=Assets()
+        )
+        self.adjust_assets(order)
+        if order.buy_order and order.asset.money_amount == 0:
+            print("ERRRORRRR")
+            return None
+        return order
 
-    def randomize_price(self, order: Order,upper_bound,lower_bound):
-        order.price = random.uniform(upper_bound,lower_bound)  # Example price range
-        
-
-    def randomize_type(self, order: Order):
-        if isinstance(order, LimitOrder):
-            order.buy_order = random.choice([True, False])
-        elif isinstance(order, MarketOrder):
-            order.buy_order = random.choice([True, False])
-        
-        if order.buy_order == True:
-            
-            Assets(money_amount=order.price*order.initial_quantity * 10)
+    def adjust_assets(self, order: Order):
+        if order.buy_order:
+            # Ensure money_amount is added for buy orders
+            order.asset = Assets(money_amount=order.price * order.initial_quantity * 10)
         else:
-            
-            Assets(PortfolioStock(order.ticker, order.initial_quantity))
+            # Ensure PortfolioStock is added for sell orders
+            order.asset = Assets(portfolio_stock=PortfolioStock(order.ticker, order.initial_quantity))
