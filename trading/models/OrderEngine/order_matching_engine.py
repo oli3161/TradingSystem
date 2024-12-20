@@ -19,31 +19,43 @@ class OrderMatchingEngine(OrderEngine):
     def __init__(self,stock_listing :StockMarketListing):
         OrderEngine.__init__(self,stock_listing)
     
+
+    def update_quotes(self):
+        """
+        Updates the bid and ask prices in the stock listing.
+        """
+        best_bid_order = self.buy_heapq.peek()
+        best_ask_order = self.sell_heapq.peek()
+
+        if best_bid_order is not None:
+            self.stock_listing.update_bid_price(best_bid_order.price)
+        if best_ask_order is not None:
+            self.stock_listing.update_ask_price(best_ask_order.price)
         
 
     def match_orders(self):
         """
         Matches buy and sell orders from the respective priority queues.
         """
-        
+        self.buy_heapq.initialize_matching_state()
+        self.sell_heapq.initialize_matching_state()
 
-        while not self.buy_heapq.is_empty() and not self.sell_heapq.is_empty():
+        while not self.buy_heapq.top_orders_verified() and not self.sell_heapq.top_orders_verified():
             
             
             # Get the best buy and sell orders
             best_buy_order = self.buy_heapq.peek()
             best_sell_order = self.sell_heapq.peek()
 
-            
-            # Update bid and ask prices
-            #no already done in market_maker class
-            # self.stock_listing.update_bid_price(best_buy_order.price)
-            # self.stock_listing.update_ask_price(best_sell_order.price)
+            if best_buy_order is None or best_sell_order is None:
+                break
 
-            # Check if orders can be matched
-            if best_buy_order.price >= best_sell_order.price:
+            
+
+            # Check if orders can be matched if both are limit orders
+            if isinstance(best_buy_order, LimitOrder) and isinstance(best_sell_order, LimitOrder) and best_buy_order.price >= best_sell_order.price:
                 # Match buy and sell orders
-                self.complete_transaction(best_sell_order, best_buy_order, best_buy_order.price)
+                self.match_limit_market_orders(best_buy_order, best_sell_order)
 
             elif isinstance(best_buy_order, LimitOrder) and isinstance(best_sell_order, MarketOrder):
                 self.match_limit_market_orders(best_buy_order, best_sell_order)
@@ -52,12 +64,32 @@ class OrderMatchingEngine(OrderEngine):
                 self.match_limit_market_orders(best_sell_order, best_buy_order)
 
             elif isinstance(best_buy_order, MarketOrder) and isinstance(best_sell_order, MarketOrder):
-                self.match_market_orders(best_buy_order, best_sell_order)
+                self.match_market_orders(best_sell_order,best_buy_order)
 
             else:
                 # No matching possible for current best orders
-                break
+                if  isinstance(best_buy_order,LimitOrder):
+                    self.buy_heapq.limit_orders_verified()
+                if  isinstance(best_sell_order,LimitOrder):
+                    self.sell_heapq.limit_orders_verified()
+                    
+        self.buy_heapq.initialize_matching_state()
+        self.sell_heapq.initialize_matching_state()
+        self.update_quotes()
            
+
+    def match_limit_orders(self,buy_order : Order,sell_order : Order):
+
+        stock_price = self.stock_listing.last_price
+
+        if abs(stock_price - buy_order.price) < abs(stock_price - sell_order.price):
+            transaction_price = buy_order.price
+        else:
+            transaction_price = sell_order.price
+
+        self.complete_transaction(sell_order,buy_order,transaction_price)
+        
+
 
     #Used to match two market orders with prices that are far from each other
     def match_market_orders(self,sell_order : Order,buy_order : Order):
@@ -75,7 +107,7 @@ class OrderMatchingEngine(OrderEngine):
 
         self.complete_transaction(sell_order,buy_order,midprice)        
 
-
+    #TODO Add verification that the market Order has enough money in the assets to buy the shares, if not, remove order and change status to cancelled
     #Used to match a limit order with a market order
     def match_limit_market_orders(self, limit_order: Order, market_order: Order):
         """
@@ -90,10 +122,10 @@ class OrderMatchingEngine(OrderEngine):
         market_order.price = limit_order.price
 
         # Update the stock listing bid/ask prices based on the type of limit order
-        if limit_order.is_buy_order():
-            self.stock_listing.update_bid_price(limit_order.price)
-        else:
-            self.stock_listing.update_ask_price(limit_order.price)
+        # if limit_order.is_buy_order():
+        #     self.stock_listing.update_bid_price(limit_order.price)
+        # else:
+        #     self.stock_listing.update_ask_price(limit_order.price)
 
         # Proceed to complete the transaction using the adjusted market order
         self.complete_transaction(
@@ -116,18 +148,20 @@ class OrderMatchingEngine(OrderEngine):
             trade_quantity = min(sell_order_quantity,buy_order_quantity)
 
         #If the quantities are equal, we can just transfer the shares and money
-        else:
+        else: 
                 trade_quantity = sell_order_quantity
 
+     
         
-        #Transfer the shares first
+        #Transfer the shares
         sellers_shares = sell_order.remove_shares(trade_quantity,price)
-        
         buy_order.add_shares(sellers_shares,price)
 
-        #Transfer the money value
+        #Transfer the money first value
         money_value = buy_order.remove_money(trade_quantity * price)
         sell_order.asset.add_money(money_value)
+
+       
 
         #Update the price of the stock_listing
         self.stock_listing.update_price(price)

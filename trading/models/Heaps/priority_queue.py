@@ -22,16 +22,19 @@ class PriorityQueue(ExecutionQueue):
         """
         ExecutionQueue.__init__(self)
         self.heap = []
-        self.market_order_queue = []
+        self.market_order_queue  = []
         self.counter = count()  # Unique sequence count for each item
         self.is_min_heap = min_heap
+        self.limit_orders_checked = False
+        self.best_orders_verified = False
 
     def initialize_matching_state(self):
 
-        self.limit_orders_verified = False
+        self.limit_orders_checked = False
+        self.best_orders_verified = False
 
-    def limit_orders_is_verified(self):
-        self.limit_orders_verified = True
+    def limit_orders_verified(self):
+        self.limit_orders_checked = True
 
 
     def push(self, order: Order):
@@ -43,11 +46,26 @@ class PriorityQueue(ExecutionQueue):
         else:
             # If it's a market order, add it to the queue
             self.market_order_queue.append(order)
+    
+    def peek(self) -> Order:
+        """Returns the best order according to the conditions without removing it."""
+        if self.is_empty():
+            return None
+        
+        # Ensure that we skip canceled orders
+        while self.heap and self.heap[0][2].is_cancelled():  # Check if the top order is canceled
+            heapq.heappop(self.heap)  # Remove the canceled order
+
+        return self._get_best_order()
 
     def pop(self) -> Order:
         """Removes and returns the best order according to the conditions."""
         if self.is_empty():
-            raise IndexError("pop from an empty priority queue")
+            return None
+    
+        # Ensure that we skip cancelled orders
+        while self.heap and self.heap[0][2].is_cancelled():  # Check if the top order is cancelled
+            heapq.heappop(self.heap)  # Remove the cancelled order
 
         best_order = self._get_best_order()
         if best_order in self.market_order_queue:
@@ -56,17 +74,14 @@ class PriorityQueue(ExecutionQueue):
             heapq.heappop(self.heap)  # Remove the top element from the heap
         return best_order
 
-    def peek(self) -> Order:
-        """Returns the best order according to the conditions without removing it."""
-        if self.is_empty():
-            raise IndexError("peek from an empty priority queue")
-
-        return self._get_best_order()
-
     def _get_best_order(self):
         """Determines the best order between the heap and market order queue."""
         heap_top = self.heap[0][2] if self.heap else None  # Get order from heap (price, counter, order)
         queue_top = self.market_order_queue[0] if self.market_order_queue else None  # Get first market order
+
+        #If limit orders have been checked, return the best market order
+        if self.limit_orders_checked:
+            return queue_top
 
         # If only one exists, return it as the best
         if heap_top and not queue_top:
@@ -83,6 +98,18 @@ class PriorityQueue(ExecutionQueue):
 
         # If prices are the same, compare order_date (FIFO for queue)
         return heap_top if heap_top.order_date <= queue_top.order_date else queue_top
+    
+    def get_order_book(self):
+        price_data = {}
+
+        for _, _, order in self.heap:
+            if order.price not in price_data:
+                price_data[order.price] = {"quantity": 0}
+            price_data[order.price]["quantity"] += 1
+
+        # Convert the price_data dictionary to a list of dictionaries
+        order_book = [{"price": price, "quantity": data["quantity"]} for price, data in price_data.items()]
+        return order_book
     
     def vizualize(self, ticker_symbol):
         """
@@ -174,6 +201,13 @@ class PriorityQueue(ExecutionQueue):
 
         # Print the table
         console.print(table)
+
+    def top_orders_verified(self):
+        
+        if not self.is_empty() and not self.best_orders_verified:
+            return False
+        else:
+            return True
 
     def is_empty(self):
         """Checks if the heap is empty."""

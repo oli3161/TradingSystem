@@ -9,7 +9,7 @@ class Order :
     def __init__(self, ticker,price, quantity, client,buy_order,assets : Assets, order_status = "Pending") :
         
         self.order_date = datetime.now()
-        self.order_status = order_status
+        self.order_status = order_status # Can be "Pending", "Completed", "Cancelled"
         self.client = client
         self.price=price
         self.ticker = ticker
@@ -45,10 +45,19 @@ class Order :
 
         return shares
 
+    
     def remove_money(self, amount):
         money = self.asset.remove_money(amount)
 
+        if money < amount:
+            self.notify_order_cancelled("Not enough money in the account")
+            return None
         return money
+    
+    def notify_order_cancelled(self,reason):
+        
+        print(f"Order {self} was cancelled because {reason}")
+        self.order_status = "Cancelled"
     
 
     def add_money(self, amount):
@@ -59,10 +68,26 @@ class Order :
 
         if self.remaining_quantity == 0:
             self.complete_order()
+    
+    def adjust_quantity(self, quantity):
+        self.remaining_quantity = quantity
+        self.initial_quantity = quantity
+
+    def is_cancelled(self):
+        """Checks if the order is cancelled."""
+        return self.order_status == "Cancelled"
+
+    def is_pending(self):
+        """Checks if the order is still pending."""
+        return self.order_status == "Pending"
+
+    def is_completed(self):
+        """Checks if the order has been completed."""
+        return self.order_status == "Completed"
 
     def __str__(self):
         return (f"Order(ticker={self.ticker}, price={self.price}, quantity={self.initial_quantity}, "
-                f"order_date={self.order_date}, client={self.client}, order_type={self.order_type}, "
+                f"order_date={self.order_date}, client={self.client}, order_type=Order, "
                 f"order_status={self.order_status}, asset={self.asset})")
     
 
