@@ -39,42 +39,41 @@ class MarketMaker:
         stock_price = self.stock_listing.last_price
         quantity = order.remaining_quantity
 
-        # Ensure we avoid division by zero for both buy and sell orders
-        if self.ordermatching_engine.instant_sell_orders == 0:
-            self.ordermatching_engine.instant_sell_orders = 1
-        if self.ordermatching_engine.instant_buy_orders == 0:
-            self.ordermatching_engine.instant_buy_orders = 1
-
         if order.is_buy_order():
+
+             # Ensure we avoid division by zero for both buy and sell orders
+            if self.ordermatching_engine.instant_sell_orders == 0:
+                self.ordermatching_engine.instant_sell_orders = 1
            
             self.ordermatching_engine.instant_buy_orders += quantity
             # Calculate buy/sell ratio
             buy_sell_ratio = self.ordermatching_engine.instant_buy_orders / self.ordermatching_engine.instant_sell_orders
 
-            # Adjust the price based on the buy/sell ratio and sensitivity
-            order_price_adjusted = stock_price + (self.smallest_increment * buy_sell_ratio) / self.volume_sensitivity
+            # Determine the price adjustement based on the buy/sell ratio and sensitivity
+            price_adjustment = (self.smallest_increment * buy_sell_ratio) / self.volume_sensitivity
+            
 
             # Update the bid price if the adjusted price is valid
-            if order_price_adjusted >= self.smallest_increment:
-                self.stock_listing.update_bid_price(order_price_adjusted)
-                order.price = self.stock_listing.bid_price
+            if price_adjustment >= self.smallest_increment:
+                order_price_adjusted = stock_price + price_adjustment
+                order.price = order_price_adjusted
 
         else:  
+
+            # Ensure we avoid division by zero for both buy and sell orders
+            if self.ordermatching_engine.instant_buy_orders == 0:
+                self.ordermatching_engine.instant_buy_orders = 1
  
             self.ordermatching_engine.instant_sell_orders += quantity
             # Calculate buy/sell ratio (flipped for sell orders)
             buy_sell_ratio = self.ordermatching_engine.instant_buy_orders / self.ordermatching_engine.instant_sell_orders
 
-            # Adjust the price based on the buy/sell ratio and sensitivity
-            order_price_adjusted = stock_price - (self.smallest_increment * buy_sell_ratio) / self.volume_sensitivity
+            # Determine the price adjustement based on the buy/sell ratio and sensitivity
+            price_adjustment = (self.smallest_increment * buy_sell_ratio) / self.volume_sensitivity
+            
 
             # Update the ask price if the adjusted price is valid
-            if order_price_adjusted >= self.smallest_increment:
-                self.stock_listing.update_ask_price(order_price_adjusted)
-                order.price = self.stock_listing.ask_price
+            if price_adjustment >= self.smallest_increment:
+                order_price_adjusted = stock_price - price_adjustment
+                order.price = order_price_adjusted
 
-         
-
-        
-     
-        

@@ -86,7 +86,7 @@ class PriorityQueue(ExecutionQueue):
     def peek(self) -> Order:
         """Returns the best order according to the conditions without removing it."""
         if self.is_empty():
-            raise IndexError("peek from an empty priority queue")
+            return None
         
         # Ensure that we skip canceled orders
         while self.heap and self.heap[0][2].is_cancelled():  # Check if the top order is canceled
@@ -97,7 +97,7 @@ class PriorityQueue(ExecutionQueue):
     def pop(self) -> Order:
         """Removes and returns the best order according to the conditions."""
         if self.is_empty():
-            raise IndexError("pop from an empty priority queue")
+            return None
     
         # Ensure that we skip cancelled orders
         while self.heap and self.heap[0][2].is_cancelled():  # Check if the top order is cancelled
@@ -134,6 +134,18 @@ class PriorityQueue(ExecutionQueue):
 
         # If prices are the same, compare order_date (FIFO for queue)
         return heap_top if heap_top.order_date <= queue_top.order_date else queue_top
+    
+    def get_order_book(self):
+        price_data = {}
+
+        for _, _, order in self.heap:
+            if order.price not in price_data:
+                price_data[order.price] = {"quantity": 0}
+            price_data[order.price]["quantity"] += 1
+
+        # Convert the price_data dictionary to a list of dictionaries
+        order_book = [{"price": price, "quantity": data["quantity"]} for price, data in price_data.items()]
+        return order_book
     
     def vizualize(self, ticker_symbol):
         """

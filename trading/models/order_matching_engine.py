@@ -34,6 +34,18 @@ class OrderMatchingEngine:
     def add_buy_order(self, order : Order):
         
         self.buy_heapq.push(order)
+
+    def update_quotes(self):
+        """
+        Updates the bid and ask prices in the stock listing.
+        """
+        best_bid_order = self.buy_heapq.peek()
+        best_ask_order = self.sell_heapq.peek()
+
+        if best_bid_order is not None:
+            self.stock_listing.update_bid_price(best_bid_order.price)
+        if best_ask_order is not None:
+            self.stock_listing.update_ask_price(best_ask_order.price)
         
 
     def match_orders(self):
@@ -75,11 +87,20 @@ class OrderMatchingEngine:
                     self.buy_heapq.limit_orders_verified()
                 if  isinstance(best_sell_order,LimitOrder):
                     self.sell_heapq.limit_orders_verified()
+                    
+        self.buy_heapq.initialize_matching_state()
+        self.sell_heapq.initialize_matching_state()
+        self.update_quotes()
            
 
     def match_limit_orders(self,buy_order : Order,sell_order : Order):
 
-        transaction_price = sell_order.price
+        stock_price = self.stock_listing.last_price
+
+        if abs(stock_price - buy_order.price) < abs(stock_price - sell_order.price):
+            transaction_price = buy_order.price
+        else:
+            transaction_price = sell_order.price
 
         self.complete_transaction(sell_order,buy_order,transaction_price)
         
@@ -116,10 +137,10 @@ class OrderMatchingEngine:
         market_order.price = limit_order.price
 
         # Update the stock listing bid/ask prices based on the type of limit order
-        if limit_order.is_buy_order():
-            self.stock_listing.update_bid_price(limit_order.price)
-        else:
-            self.stock_listing.update_ask_price(limit_order.price)
+        # if limit_order.is_buy_order():
+        #     self.stock_listing.update_bid_price(limit_order.price)
+        # else:
+        #     self.stock_listing.update_ask_price(limit_order.price)
 
         # Proceed to complete the transaction using the adjusted market order
         self.complete_transaction(
