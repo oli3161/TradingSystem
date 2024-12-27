@@ -79,7 +79,7 @@ def test_limit_order(setup_environment,setup_limit_orders):
 def test_market_buy_order01(setup_environment,setup_market_orders):
     """Test the processing of market orders."""
     stock_exchange = setup_environment["stock_exchange"]
-    market_maker : MarketMaker = setup_environment["market_maker"]
+    market_maker : DynamicMarketMaker = setup_environment["market_maker"]
     order_matching_engine : OrderMatchingEngine = setup_environment["order_matching_engine"]
     market_buy_order = setup_market_orders["market_buy_order"]
     market_sell_order = setup_market_orders["market_sell_order"]
@@ -96,7 +96,7 @@ def test_market_buy_order01(setup_environment,setup_market_orders):
 def test_market_buy_order02(setup_environment,setup_market_orders):
     """Test the processing of market orders."""
     stock_exchange = setup_environment["stock_exchange"]
-    market_maker : MarketMaker = setup_environment["market_maker"]
+    market_maker : DynamicMarketMaker = setup_environment["market_maker"]
     order_matching_engine : OrderMatchingEngine = setup_environment["order_matching_engine"]
     market_buy_order = setup_market_orders["market_buy_order"]
     market_sell_order = setup_market_orders["market_sell_order"]

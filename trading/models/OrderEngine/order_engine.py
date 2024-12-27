@@ -3,7 +3,7 @@ from ..Heaps.priority_queue import PriorityQueue
 
 from ..transaction import Transaction
 
-from ..stock_market_listing import StockMarketListing
+from ..Assets.stock_market_listing import Asset
 
 from ..order import Order
 
@@ -11,7 +11,7 @@ from ..order import Order
 class OrderEngine(ABC):
     """Abstract class defining the interface for order heap implementations."""
 
-    def __init__(self,stock_listing :StockMarketListing):
+    def __init__(self,stock_listing :Asset):
         self.sell_heapq = PriorityQueue(min_heap=True)
         self.buy_heapq = PriorityQueue(min_heap=False)
 

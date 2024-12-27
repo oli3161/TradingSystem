@@ -12,7 +12,7 @@ class TestOrderMatchingEngine(unittest.TestCase):
     def setUp(self):
         """Initialize the engine and create some orders."""
         # Create a mock stock listing
-        self.stock_listing = StockMarketListing("AAPL", 150.00, 155.00)  # Initial bid and ask
+        self.stock_listing = Asset("AAPL", 150.00, 155.00)  # Initial bid and ask
         self.engine = OrderMatchingEngine(self.stock_listing)
 
         # Create mock clients and assets

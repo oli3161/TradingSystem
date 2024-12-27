@@ -7,7 +7,7 @@ def setup_engine():
     """
     Fixture to set up the OrderMatchingEngine with required dependencies.
     """
-    stock_listing = StockMarketListing("AAPL", "Apple", 101.0)  # Example stock listing
+    stock_listing = Asset("AAPL", "Apple", 101.0)  # Example stock listing
     engine = OrderMatchingEngine(stock_listing)
     return engine
 

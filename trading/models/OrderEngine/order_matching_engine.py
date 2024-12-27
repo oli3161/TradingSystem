@@ -2,7 +2,7 @@ from .order_engine import OrderEngine
 from ..order import Order
 from ..limit_order import LimitOrder
 from ..market_order import MarketOrder
-from ..stock_market_listing import StockMarketListing
+from ..Assets.stock_market_listing import Asset
 from ..transaction import Transaction
 from datetime import datetime
 
@@ -16,7 +16,7 @@ class OrderMatchingEngine(OrderEngine):
     money = 0
 
 
-    def __init__(self,stock_listing :StockMarketListing):
+    def __init__(self,stock_listing :Asset):
         OrderEngine.__init__(self,stock_listing)
     
 

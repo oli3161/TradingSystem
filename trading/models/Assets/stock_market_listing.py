@@ -3,7 +3,7 @@ from rich.panel import Panel
 from rich.table import Table
 from rich.box import ROUNDED
 
-class StockMarketListing:
+class Asset:
     def __init__(self, ticker_symbol, company_name, last_price):
         self.ticker_symbol = ticker_symbol
         self.company_name = company_name

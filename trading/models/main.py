@@ -1,7 +1,7 @@
 import sys
 import time
 
-sys.path.append('C:/A/ETS/AlgoETS/Simulateur/TradingSystem/TradingSystem/trading')  # Adjust to the actual path of the 'trading' folder
+sys.path.append('C:/Users/ogigu/OneDrive/Documents/Ecole/Algo/TradingSystem/trading')  # Adjust to the actual path of the 'trading' folder
 
 from models import *
 

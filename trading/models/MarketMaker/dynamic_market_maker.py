@@ -1,14 +1,14 @@
-from .OrderEngine.order_matching_engine import OrderMatchingEngine
-from .order import Order
-from .market_order import MarketOrder
-from .limit_order import LimitOrder
-from .stock_market_listing import StockMarketListing
+from ..OrderEngine.order_matching_engine import OrderMatchingEngine
+from ..order import Order
+from ..market_order import MarketOrder
+from ..limit_order import LimitOrder
+from ..Assets.stock_market_listing import Asset
 
 
-class MarketMaker:
+class DynamicMarketMaker:
 
     #TODO Make volume sensitivity and smallest increment dynamic
-    def __init__(self,ordermatching_engine : OrderMatchingEngine,ticker_symbol, stock_listing : StockMarketListing):
+    def __init__(self,ordermatching_engine : OrderMatchingEngine,ticker_symbol, stock_listing : Asset):
 
         self.stock_listing = stock_listing
         self.ticker_symbol = ticker_symbol
