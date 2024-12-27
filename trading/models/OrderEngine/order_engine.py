@@ -1,11 +1,8 @@
 from abc import ABC, abstractmethod
-from ..Heaps.priority_queue import PriorityQueue
-
-from ..transaction import Transaction
-
-from ..Assets.stock_market_listing import Asset
-
-from ..order import Order
+from trading.models.Heaps.priority_queue import PriorityQueue
+from trading.models.transaction import Transaction
+from trading.models.Assets.stock_market_listing import Asset
+from trading.models.order import Order
 
 
 class OrderEngine(ABC):

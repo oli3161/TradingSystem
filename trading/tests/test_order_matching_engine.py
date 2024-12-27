@@ -1,6 +1,6 @@
 import pytest
 from datetime import datetime
-from models import *
+from ..models import *
 
 @pytest.fixture
 def setup_engine():

@@ -1,11 +1,9 @@
-import sys
-sys.path.append('C:/Users/ogigu/OneDrive/Documents/Programming/Algo/TradingSystem/trading')  # Adjust to the actual path of the 'trading' folder
 import logging
 
 logging.basicConfig(level=logging.INFO)
 
 import pytest
-from models import *
+from trading.models import *
 
 @pytest.fixture
 def setup_environment():

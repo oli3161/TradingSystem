@@ -1,68 +1,37 @@
-import asyncio
-from models import *
-from websockets.asyncio.server import serve, ServerConnection
+import time
+from trading.models import *
 
-import asyncio
-import websockets
 
-class WebSocketServerRepository:
-    connections: dict[str, ServerConnection]
 
-    def __init__(self):
-        self.connections = {}
+exchange = StockExchange('NYSE')
+exchange.addStockMarketListing("AAPL", "Apple Inc.", 155.00)
 
-    def add_connection(self, websocket: ServerConnection, username: str):
-        identifier = f"{username}@{websocket.remote_address[0]}:{websocket.remote_address[1]}"
 
-        self.connections[identifier] = websocket
 
-        print(f"New connection added: {identifier}")
+# Create OrderFlow instances
+order_flow1 = OrderFlow(1)
+order_flow2 = OrderFlow(2)
 
-        return identifier
 
-    async def remove_connection(self, identifier):
-        if identifier in self.connections:
-            await self.connections[identifier].close()
-
-            del self.connections[identifier]
-
-    async def send_message(self, identifier, message):
-        if identifier not in self.connections:
-            return
+# Function to simulate stock market ticks
+def simulate_market_ticks(stock_exchange : StockExchange, order_flow1 : OrderFlow, order_flow2 : OrderFlow, duration):
+    start_time = time.time()
+    while time.time() - start_time < duration:        
         
-        websocket = self.connections[identifier]
+        # Randomize and submit orders
+        order_flow1.submit_random_orders(stock_exchange, 10, 140.00, 160.00, "AAPL")
+        order_flow2.submit_random_orders(stock_exchange, 10, 140.00, 160.00, "AAPL")
+        
+        
+        # Match orders and print transactions
+        engine = stock_exchange.getMarketMaker("AAPL").ordermatching_engine
+        engine.match_orders()
+        stock_exchange.getStockMarketListing("AAPL").visualize_ticker()
 
-        await websocket.send(message)
+        # Wait for 1 second before the next tick
+        time.sleep(1)
 
-async def handle_client(websocket: ServerConnection, repo: WebSocketServerRepository):
-    if not websocket.request:
-        await websocket.close()
-        return
 
-    username = websocket.request.path.split("/", 1)[1]
 
-    if username == "":
-        await websocket.close()
-        return
-
-    identifier = repo.add_connection(websocket, username)
-
-    try:
-        async for message in websocket:
-            print(message)
-    
-    except websockets.exceptions.ConnectionClosedError as e:
-        print(f"Connection with {identifier} closed unexpectedly: {e}")
-    except Exception as e:
-        print(f"Error in connection with {identifier}: {e}")
-    finally:
-        await repo.remove_connection(identifier)
-
-async def main():
-    websocketRepo = WebSocketServerRepository()
-
-    async with serve(lambda ws: handle_client(ws, websocketRepo), "0.0.0.0", 8765) as server:
-        await server.serve_forever() 
-
-if __name__ == "__main__":
-    asyncio.run(main())
+# Simulate market for 60 seconds
+simulate_market_ticks(exchange, order_flow1, order_flow2, 300)

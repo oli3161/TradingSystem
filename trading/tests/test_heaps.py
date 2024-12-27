@@ -1,9 +1,4 @@
-import sys
-
-sys.path.append('C:/Users/ogigu/OneDrive/Documents/Programming/Algo/TradingSystem/trading')  # Adjust to the actual path of the 'trading' folder
-
-from models import *
-
+from ..models import *
 import pytest
 
 # Create mock clients and assets for testing
