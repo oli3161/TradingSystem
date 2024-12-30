@@ -8,7 +8,7 @@ class TestOrderMatchingEngine(unittest.TestCase):
         """Initialize the engine and create some orders."""
         # Create a mock stock listing
         self.stock_listing = Asset("AAPL", 150.00, 155.00)  # Initial bid and ask
-        self.engine = OrderMatchingEngine(self.stock_listing)
+        self.engine = SimulatedOrderMatchingEngine(self.stock_listing)
 
         # Create mock clients and assets
         client1_assets = Assets(PortfolioStock("AAPL", 50, 150.00, 160.00), 5000)

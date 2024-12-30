@@ -5,6 +5,11 @@ from trading.models.Assets.stock_market_listing import Asset
 from trading.models.order import Order
 
 
+class OrderMatchingEngineFactory(ABC):
+    @abstractmethod
+    def create_order_matching_engine(self, stock_market_listing):
+        pass
+
 class OrderEngine(ABC):
     """Abstract class defining the interface for order heap implementations."""
 

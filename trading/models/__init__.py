@@ -7,7 +7,7 @@ from .assets import Assets
 from .stock_exchange import StockExchange
 from .Assets.stock_market_listing import Asset
 from .OrderEngine.order_engine import OrderEngine
-from .OrderEngine.order_matching_engine import OrderMatchingEngine
+from .OrderEngine.order_matching_engine import SimulatedOrderMatchingEngine
 from .MarketMaker.dynamic_market_maker import DynamicMarketMaker
 from .order_flow import OrderFlow
 from .limit_order import LimitOrder

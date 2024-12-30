@@ -5,12 +5,17 @@ from trading.models.market_order import MarketOrder
 from trading.models.Assets.stock_market_listing import Asset
 from trading.models.transaction import Transaction
 from datetime import datetime
+from .order_engine import OrderMatchingEngineFactory
 
 #TODO : Increment the money made by the engine with the spread when matching orders
 #TODO : Switch the spread and money logic to the MarketMaker class
 
+class SimulatedOrderMatchingEngineFactory(OrderMatchingEngineFactory):
+    def create_order_matching_engine(self, stock_market_listing):
+        return SimulatedOrderMatchingEngine(stock_market_listing)
 
-class OrderMatchingEngine(OrderEngine):
+
+class SimulatedOrderMatchingEngine(OrderEngine):
 
     spread = 0.02
     money = 0

@@ -1,21 +1,25 @@
-from ..OrderEngine.order_matching_engine import OrderMatchingEngine
+from ..OrderEngine.order_matching_engine import SimulatedOrderMatchingEngine
 from ..order import Order
 from ..market_order import MarketOrder
 from ..limit_order import LimitOrder
 from ..Assets.stock_market_listing import Asset
+from .market_maker import MarketMakerFactory
 
+class DynamictMarketMakerFactory(MarketMakerFactory):
+    def create_market_maker(self, order_matching_engine, ticker_symbol, asset):
+        return DynamicMarketMaker(order_matching_engine, ticker_symbol, asset)
 
 class DynamicMarketMaker:
 
     #TODO Make volume sensitivity and smallest increment dynamic
-    def __init__(self,ordermatching_engine : OrderMatchingEngine,ticker_symbol, stock_listing : Asset):
+    def __init__(self,ordermatching_engine : SimulatedOrderMatchingEngine,ticker_symbol, asset : Asset):
 
-        self.stock_listing = stock_listing
+        self.asset = asset
         self.ticker_symbol = ticker_symbol
         self.ordermatching_engine = ordermatching_engine
 
         self.smallest_increment = 0.01
-        self.volume_sensitivity = 10 # sensitivity to volume changes
+        self.volume_sensitivity = 10 # sensitivity to volume changes        
 
 
     def process_order(self,order : Order):
@@ -36,7 +40,7 @@ class DynamicMarketMaker:
 
 
     def adjust_order_price(self, order: Order):
-        stock_price = self.stock_listing.last_price
+        stock_price = self.asset.last_price
         quantity = order.remaining_quantity
 
         if order.is_buy_order():
@@ -76,4 +80,5 @@ class DynamicMarketMaker:
             if price_adjustment >= self.smallest_increment:
                 order_price_adjusted = stock_price - price_adjustment
                 order.price = order_price_adjusted
+
 
