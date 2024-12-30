@@ -13,3 +13,4 @@ from .order_flow import OrderFlow
 from .limit_order import LimitOrder
 from .market_order import MarketOrder
 from .Heaps.priority_queue import PriorityQueue
+from .Services.yahoo_finance import YahooFinance
