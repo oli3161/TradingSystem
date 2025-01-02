@@ -38,7 +38,7 @@ class OrderFlow(Client):
     def adjust_assets(self, order: Order):
         if order.buy_order:
             # Ensure money_amount is added for buy orders
-            order.asset = Assets(money_amount=order.price * order.initial_quantity * 10)
+            order.asset = Assets(money_amount=order.price * order.initial_quantity)
         else:
             # Ensure PortfolioStock is added for sell orders
             order.asset = Assets(portfolio_stock=PortfolioStock(order.ticker, order.initial_quantity))

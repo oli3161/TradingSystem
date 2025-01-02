@@ -1,12 +1,6 @@
 import heapq
 from itertools import count
-from rich.console import Console
-from rich.table import Table
-from rich.panel import Panel
-from rich.box import DOUBLE_EDGE
-
 from .execution_queue import ExecutionQueue
-
 from ..limit_order import LimitOrder
 from ..order import Order
 
@@ -21,8 +15,8 @@ class PriorityQueue(ExecutionQueue):
                                 If False, behaves as a max-heap (descending order by price).
         """
         ExecutionQueue.__init__(self)
-        self.heap = []
-        self.market_order_queue  = []
+        self.heap : list[tuple[float,int,Order]] = []
+        self.market_order_queue : list[Order]  = []
         self.counter = count()  # Unique sequence count for each item
         self.is_min_heap = min_heap
         self.limit_orders_checked = False
@@ -52,9 +46,7 @@ class PriorityQueue(ExecutionQueue):
         if self.is_empty():
             return None
         
-        # Ensure that we skip canceled orders
-        while self.heap and self.heap[0][2].is_cancelled():  # Check if the top order is canceled
-            heapq.heappop(self.heap)  # Remove the canceled order
+        self.remove_cancelled_orders()
 
         return self._get_best_order()
 
@@ -63,9 +55,7 @@ class PriorityQueue(ExecutionQueue):
         if self.is_empty():
             return None
     
-        # Ensure that we skip cancelled orders
-        while self.heap and self.heap[0][2].is_cancelled():  # Check if the top order is cancelled
-            heapq.heappop(self.heap)  # Remove the cancelled order
+        self.remove_cancelled_orders()
 
         best_order = self._get_best_order()
         if best_order in self.market_order_queue:
@@ -82,6 +72,9 @@ class PriorityQueue(ExecutionQueue):
         #If limit orders have been checked, return the best market order
         if self.limit_orders_checked:
             return queue_top
+        
+        if not heap_top and not queue_top:
+            return None
 
         # If only one exists, return it as the best
         if heap_top and not queue_top:
@@ -99,108 +92,17 @@ class PriorityQueue(ExecutionQueue):
         # If prices are the same, compare order_date (FIFO for queue)
         return heap_top if heap_top.order_date <= queue_top.order_date else queue_top
     
-    def get_order_book(self):
+    #Returns a dictionary of the price levels in the format : {price: quantity}
+    def get_order_book(self) -> dict:
         price_data = {}
 
         for _, _, order in self.heap:
             if order.price not in price_data:
-                price_data[order.price] = {"quantity": 0}
-            price_data[order.price]["quantity"] += 1
+                price_data[order.price] = 0
+            price_data[order.price] += order.remaining_quantity
 
-        # Convert the price_data dictionary to a list of dictionaries
-        order_book = [{"price": price, "quantity": data["quantity"]} for price, data in price_data.items()]
-        return order_book
+        return price_data
     
-    def vizualize(self, ticker_symbol):
-        """
-        Visualizes the order book and market order queue with a title and ticker symbol.
-        
-        Args:
-            ticker_symbol (str): The symbol of the stock or asset being visualized.
-        """
-        # Determine the title based on whether this is a buy or sell heap
-        order_type = "Sell" if self.is_min_heap else "Buy"
-        print(f"==== {order_type} Order Book for {ticker_symbol} ====")
-        print()
-
-        # Visualize heap and market order queue
-        self.vizualize_heap(ticker_symbol)
-        self.vizualize_market_order_queue()
-
-    def vizualize_heap(self, ticker_symbol):
-        """
-        Visualizes the heap with dynamic price colors (green for Buy, red for Sell),
-        white for the number of orders, and the total quantity at each price level,
-        using styled tables and a large title.
-
-        Args:
-            ticker_symbol (str): The symbol of the stock or asset being visualized.
-        """
-        console = Console()
-
-        # Title: Buy or Sell Order Book
-        order_type = "Buy" if self.is_min_heap else "Sell"
-        title_text = f"[bold blue]{order_type} Order Book for {ticker_symbol}[/bold blue]"
-        console.print(Panel(title_text, expand=True, style="bold cyan"))
-
-        # Check if heap is empty
-        if not self.heap:
-            console.print("[bold red]Order Book (Heap) is empty.[/bold red]", style="bold")
-            return
-
-        # Aggregate data for price levels
-        price_data = {}
-        for _, _, order in self.heap:
-            if order.price not in price_data:
-                price_data[order.price] = {"count": 0, "quantity": 0}
-            price_data[order.price]["count"] += 1
-            price_data[order.price]["quantity"] += order.remaining_quantity
-
-        # Determine price color based on order type
-        price_color = "green bold" if self.is_min_heap else "red bold"
-
-        # Create a table with rich styling
-        table = Table(title="", box=DOUBLE_EDGE, title_style="bold green")
-        table.add_column("Price Level", justify="right", style=price_color)
-        table.add_column("Number of Orders", justify="right", style="white bold")
-        table.add_column("Total Quantity", justify="right", style="cyan bold")
-
-        # Add rows to the table
-        for price, data in sorted(price_data.items(), reverse=not self.is_min_heap):
-            table.add_row(f"{price:.2f}", str(data["count"]), str(data["quantity"]))
-
-        # Print the table
-        console.print(table)
-
-
-
-    def vizualize_market_order_queue(self):
-        """
-        Visualizes the market order queue with colors and boxes.
-        """
-        console = Console()
-
-        if not self.market_order_queue:
-            console.print("[bold red]Market Order Queue is empty.[/bold red]", style="bold")
-            return
-
-        # Count the total number of market orders
-        total_market_orders = len(self.market_order_queue)
-
-        
-        unique_prices = self.market_order_queue[0].price if self.market_order_queue else 0
-
-        # Create a table with rich styling
-        table = Table(title="Market Order Queue Summary", box=DOUBLE_EDGE, title_style="bold cyan")
-        table.add_column("Metric", justify="left", style="green bold", no_wrap=True)
-        table.add_column("Value", justify="left", style="bold white")
-
-        # Add rows to the table
-        table.add_row("Number of Market Orders", str(total_market_orders))
-        table.add_row("Associated Prices", " ",str(unique_prices))
-
-        # Print the table
-        console.print(table)
 
     def top_orders_verified(self):
         
@@ -223,3 +125,18 @@ class PriorityQueue(ExecutionQueue):
 
     def __str__(self):
         return str([order for _, _, order in self.heap])
+    
+    def clear(self):
+        """Clears the heap and market order queue."""
+        self.heap.clear()
+        self.market_order_queue.clear()
+
+    def remove_cancelled_orders(self):
+        """Removes cancelled orders from the top of the heap and market order queue."""
+        # Remove cancelled orders from the heap
+        while self.heap and (self.heap[0][2].is_cancelled() or self.heap[0][2].is_completed()):
+            heapq.heappop(self.heap)
+
+        # Remove cancelled orders from the market order queue
+        while self.market_order_queue and (self.market_order_queue[0].is_cancelled() or self.market_order_queue[0].is_completed()):
+            self.market_order_queue.pop(0)

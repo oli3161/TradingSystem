@@ -55,12 +55,11 @@ class SimulatedOrderMatchingEngine(OrderEngine):
             if best_buy_order is None or best_sell_order is None:
                 break
 
-            
 
             # Check if orders can be matched if both are limit orders
             if isinstance(best_buy_order, LimitOrder) and isinstance(best_sell_order, LimitOrder) and best_buy_order.price >= best_sell_order.price:
                 # Match buy and sell orders
-                self.match_limit_market_orders(best_buy_order, best_sell_order)
+                self.match_limit_orders(best_buy_order, best_sell_order)
 
             elif isinstance(best_buy_order, LimitOrder) and isinstance(best_sell_order, MarketOrder):
                 self.match_limit_market_orders(best_buy_order, best_sell_order)
@@ -90,7 +89,11 @@ class SimulatedOrderMatchingEngine(OrderEngine):
         if abs(stock_price - buy_order.price) < abs(stock_price - sell_order.price):
             transaction_price = buy_order.price
         else:
-            transaction_price = sell_order.price
+            transaction_price = stock_price
+
+        if buy_order.asset.money_amount < buy_order.remaining_quantity * transaction_price:
+            print(f"buy order cannot buy {self.stock_listing.ticker_symbol} showing {self.stock_listing.last_price} at {transaction_price}")
+            print("buy order : " + str(buy_order))
 
         self.complete_transaction(sell_order,buy_order,transaction_price)
         
@@ -103,12 +106,14 @@ class SimulatedOrderMatchingEngine(OrderEngine):
         midprice = (sell_order.price + buy_order.price) / 2
 
         #Adjust the prices of the buy order
-        adjusted_buy_price = midprice + self.spread / 2
-        buy_order.price = adjusted_buy_price 
+        # adjusted_buy_price = midprice + self.spread / 2
+        price_adjusted = buy_order.adjust_price(midprice)
+        if price_adjusted == False:
+            return
 
         #Adjust the prices of the sell order
-        adjusted_sell_price = midprice - self.spread / 2
-        sell_order.price = adjusted_sell_price
+        # adjusted_sell_price = midprice - self.spread / 2
+        sell_order.price = midprice
 
         self.complete_transaction(sell_order,buy_order,midprice)        
 
@@ -124,7 +129,9 @@ class SimulatedOrderMatchingEngine(OrderEngine):
             market_order (Order): The market order (buy or sell).
         """
         # Adjust the market order's price to the limit order's price
-        market_order.price = limit_order.price
+        price_adjusted = market_order.adjust_price(limit_order.price)
+        if price_adjusted == False:
+            return
 
         # Update the stock listing bid/ask prices based on the type of limit order
         # if limit_order.is_buy_order():
@@ -163,6 +170,8 @@ class SimulatedOrderMatchingEngine(OrderEngine):
         buy_order.add_shares(sellers_shares,price)
 
         #Transfer the money first value
+        if buy_order.asset.money_amount < trade_quantity * price:
+            print("Here")
         money_value = buy_order.remove_money(trade_quantity * price)
         sell_order.asset.add_money(money_value)
 
@@ -189,10 +198,10 @@ class SimulatedOrderMatchingEngine(OrderEngine):
         self.transactions.append(transaction)
 
         #If the order is fully executed, remove it from the heap
-        if sell_order.remaining_quantity == 0:
-            self.sell_heapq.pop()
-        if buy_order.remaining_quantity == 0:
-            self.buy_heapq.pop()
+        # if sell_order.remaining_quantity == 0:
+        #     self.sell_heapq.pop()
+        # if buy_order.remaining_quantity == 0:
+        #     self.buy_heapq.pop()
     
 
     def __str__(self):
