@@ -34,12 +34,12 @@ class PriorityQueue(ExecutionQueue):
     def push(self, order: Order):
         """Adds an order to the appropriate data structure."""
         if isinstance(order, LimitOrder):
-            # If it's a limit order, push it to the heap
-            price = order.price if self.is_min_heap else -order.price  # Adjust price for heap behavior
+            # Use `order.price.amount` for heap sorting but retain the Money object in the order
+            price = order.price.amount if self.is_min_heap else -order.price.amount
             heapq.heappush(self.heap, (price, next(self.counter), order))
         else:
-            # If it's a market order, add it to the queue
             self.market_order_queue.append(order)
+
     
     def peek(self) -> Order:
         """Returns the best order according to the conditions without removing it."""
@@ -83,7 +83,7 @@ class PriorityQueue(ExecutionQueue):
             return queue_top
 
         # Compare prices
-        if heap_top.price != queue_top.price:
+        if heap_top.price.amount != queue_top.price.amount:
             if self.is_min_heap:
                 return heap_top if heap_top.price < queue_top.price else queue_top
             else:

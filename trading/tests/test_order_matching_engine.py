@@ -20,7 +20,7 @@ def create_order():
         client = Client(client_name)
         if buy_order:
             
-            assets = Assets(money_amount=10000)  # Mock assets with 10k cash
+            assets = Assets(money=10000)  # Mock assets with 10k cash
         else :
             assets = Assets(PortfolioStock(ticker,quantity))
         return Order(ticker, price, quantity, client, buy_order, assets)

@@ -4,7 +4,7 @@ from trading.models import *
 
 
 exchange = StockExchange('NYSE')
-exchange.addStockMarketListing("AAPL", "Apple Inc.", 155.00)
+exchange.addStockMarketListing("AAPL", "Apple Inc.", Money(150.00))
 
 
 

@@ -6,6 +6,7 @@ from .client import Client
 from .assets import Assets
 from .portfolio_stock import PortfolioStock
 import random
+from .money import Money
 
 class OrderFlow(Client):
 
@@ -23,14 +24,14 @@ class OrderFlow(Client):
         order_type = random.choice([LimitOrder, MarketOrder])
         order = order_type(
             ticker=ticker,
-            price=random.uniform(min_price, max_price),
+            price=Money(random.uniform(min_price, max_price)),
             quantity=random.randint(1, 100),
             client=fake_client,
             buy_order=buy_order,
             assets=Assets()
         )
         self.adjust_assets(order)
-        if order.buy_order and order.asset.money_amount == 0:
+        if order.buy_order and order.asset.money.amount == 0:
             print("ERRRORRRR")
             return None
         return order
@@ -38,7 +39,7 @@ class OrderFlow(Client):
     def adjust_assets(self, order: Order):
         if order.buy_order:
             # Ensure money_amount is added for buy orders
-            order.asset = Assets(money_amount=order.price * order.initial_quantity)
+            order.asset = Assets(money=Money(order.price.amount * order.initial_quantity))
         else:
             # Ensure PortfolioStock is added for sell orders
             order.asset = Assets(portfolio_stock=PortfolioStock(order.ticker, order.initial_quantity))

@@ -25,7 +25,8 @@ class DynamicMarketMaker:
     def process_order(self,order : Order):
         
         if isinstance(order,MarketOrder):
-            self.adjust_order_price(order)
+            # self.adjust_order_price(order)
+            pass
 
         if order.is_buy_order() == True:
             

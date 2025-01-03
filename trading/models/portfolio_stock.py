@@ -1,3 +1,5 @@
+from .money import Money
+
 class PortfolioStock:
 
     def __init__(self, ticker_symbol = None, shares_owned = 0, average_purchase_price = 0,
@@ -16,18 +18,18 @@ class PortfolioStock:
             self.total_invested = 0
             self.unrealized_gain_loss = 0
 
-    def add_shares(self,quantity,price):
+    def add_shares(self,quantity,price:Money):
 
-        new_value = quantity * price
+        new_value = quantity * price.amount
 
         self.total_invested += new_value
         self.shares_owned += quantity
         self.average_purchase_price = self.total_invested / self.shares_owned
         self.unrealized_gain_loss = (self.market_price - self.average_purchase_price) * self.shares_owned
 
-    def remove_shares(self,quantity,price):
+    def remove_shares(self,quantity,price:Money):
 
-        new_value = quantity * price
+        new_value = quantity * price.amount
 
         self.total_invested -= new_value
         self.shares_owned -= quantity

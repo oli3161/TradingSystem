@@ -6,6 +6,7 @@ from trading.models.Assets.stock_market_listing import Asset
 from trading.models.transaction import Transaction
 from datetime import datetime
 from .order_engine import OrderMatchingEngineFactory
+from trading.models.money import Money
 
 #TODO : Increment the money made by the engine with the spread when matching orders
 #TODO : Switch the spread and money logic to the MarketMaker class
@@ -85,15 +86,17 @@ class SimulatedOrderMatchingEngine(OrderEngine):
     def match_limit_orders(self,buy_order : Order,sell_order : Order):
 
         stock_price = self.stock_listing.last_price
+        # stock_price = Decimal(stock_price)  # Convert once
 
-        if abs(stock_price - buy_order.price) < abs(stock_price - sell_order.price):
+        if abs(stock_price.amount - buy_order.price.amount) < abs(stock_price.amount - sell_order.price.amount):
+            
             transaction_price = buy_order.price
         else:
-            transaction_price = stock_price
+            transaction_price = sell_order.price
 
-        if buy_order.asset.money_amount < buy_order.remaining_quantity * transaction_price:
-            print(f"buy order cannot buy {self.stock_listing.ticker_symbol} showing {self.stock_listing.last_price} at {transaction_price}")
-            print("buy order : " + str(buy_order))
+        # if buy_order.asset.money < buy_order.remaining_quantity * transaction_price:
+        #     print(f"buy order cannot buy {self.stock_listing.ticker_symbol} showing {self.stock_listing.last_price} at {transaction_price}")
+        #     print("buy order : " + str(buy_order))
 
         self.complete_transaction(sell_order,buy_order,transaction_price)
         
@@ -106,13 +109,11 @@ class SimulatedOrderMatchingEngine(OrderEngine):
         midprice = (sell_order.price + buy_order.price) / 2
 
         #Adjust the prices of the buy order
-        # adjusted_buy_price = midprice + self.spread / 2
         price_adjusted = buy_order.adjust_price(midprice)
         if price_adjusted == False:
             return
 
         #Adjust the prices of the sell order
-        # adjusted_sell_price = midprice - self.spread / 2
         sell_order.price = midprice
 
         self.complete_transaction(sell_order,buy_order,midprice)        
@@ -148,31 +149,26 @@ class SimulatedOrderMatchingEngine(OrderEngine):
 
         
 
-    def complete_transaction(self,sell_order : Order,buy_order : Order,price):
+    def complete_transaction(self,sell_order : Order,buy_order : Order,price : Money):
 
         
         sell_order_quantity = sell_order.remaining_quantity
         buy_order_quantity = buy_order.remaining_quantity 
 
-        #If the quantities are not equal, we need to adjust the quantities
-        if  sell_order_quantity != buy_order_quantity :
+        # Determine the trade quantity
+        trade_quantity = min(sell_order_quantity, buy_order_quantity)
 
-            trade_quantity = min(sell_order_quantity,buy_order_quantity)
+        # Calculate the total transaction cost
+        total_cost = price * trade_quantity
 
-        #If the quantities are equal, we can just transfer the shares and money
-        else: 
-                trade_quantity = sell_order_quantity
-
-     
-        
         #Transfer the shares
         sellers_shares = sell_order.remove_shares(trade_quantity,price)
         buy_order.add_shares(sellers_shares,price)
 
         #Transfer the money first value
-        if buy_order.asset.money_amount < trade_quantity * price:
+        if buy_order.asset.money < total_cost:
             print("Here")
-        money_value = buy_order.remove_money(trade_quantity * price)
+        money_value = buy_order.remove_money(total_cost)
         sell_order.asset.add_money(money_value)
 
        
@@ -193,7 +189,7 @@ class SimulatedOrderMatchingEngine(OrderEngine):
             buyer=buy_order.client,
             seller=sell_order.client,
             transaction_type=True,
-            total_value=trade_quantity * price
+            total_value=trade_quantity * price.amount
         )
         self.transactions.append(transaction)
 

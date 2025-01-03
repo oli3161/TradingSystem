@@ -4,6 +4,7 @@ from .MarketMaker.dynamic_market_maker import DynamicMarketMaker,DynamictMarketM
 from .OrderEngine.order_matching_engine import SimulatedOrderMatchingEngine,SimulatedOrderMatchingEngineFactory
 from .order import Order
 from .constants import MODE_LIVE, MODE_SIMULATION
+from .money import Money
 
 class StockExchange:
 
@@ -22,7 +23,7 @@ class StockExchange:
         stock_market_listing.process_order(order)
 
     
-    def addStockMarketListing(self,ticker_symbol, company_name, last_price):
+    def addStockMarketListing(self,ticker_symbol, company_name, last_price:Money):
 
         # Create the stock market listing with the associated : Asset, OrderMatchingEngine and MarketMaker
         stock_market_listing = Asset(ticker_symbol, company_name, last_price)
