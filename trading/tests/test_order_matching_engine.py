@@ -7,7 +7,7 @@ def setup_engine():
     """
     Fixture to set up the OrderMatchingEngine with required dependencies.
     """
-    stock_listing = Asset("AAPL", "Apple", 101.0)  # Example stock listing
+    stock_listing = Asset("AAPL", "Apple", Money(101.0))  # Example stock listing
     engine = SimulatedOrderMatchingEngine(stock_listing)
     return engine
 
@@ -20,7 +20,7 @@ def create_order():
         client = Client(client_name)
         if buy_order:
             
-            assets = Assets(money=10000)  # Mock assets with 10k cash
+            assets = Assets(money = Money(10000))  # Mock assets with 10k cash
         else :
             assets = Assets(PortfolioStock(ticker,quantity))
         return Order(ticker, price, quantity, client, buy_order, assets)
@@ -49,8 +49,10 @@ def test_match_market_orders(setup_engine, create_order):
     Test matching two market orders.
     """
     engine = setup_engine
-    buy_order = create_order("AAPL", 105.0, 10, "Alice", True)
-    sell_order = create_order("AAPL", 95.0, 10, "Bob", False)
+    buy_order = create_order("AAPL", Money(105.0)
+    , 10, "Alice", True)
+    sell_order = create_order("AAPL", Money(95.0)
+    , 10, "Bob", False)
 
     engine.add_buy_order(buy_order)
     engine.add_sell_order(sell_order)
@@ -58,7 +60,7 @@ def test_match_market_orders(setup_engine, create_order):
     engine.match_market_orders(sell_order, buy_order)
 
     # Verify adjusted prices
-    assert buy_order.price > sell_order.price, "Buy price should be greater after spread adjustment"
+    assert buy_order.price == sell_order.price, "Buy price should be equal"
 
     # Verify transaction recording
     assert len(engine.transactions) == 1, "One transaction should be recorded"

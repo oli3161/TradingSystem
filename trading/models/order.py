@@ -20,12 +20,20 @@ class Order:
         self.order_date = datetime.now()
         self.order_status = order_status
         self.client = client
-        self.price: Money = price
         self.ticker = ticker
         self.remaining_quantity = quantity
         self.initial_quantity = quantity
         self.buy_order = buy_order
         self.asset: Assets = assets
+
+        if isinstance(price, Money):
+            self.price = price
+
+        elif isinstance(price, float) or isinstance(price, int):
+            self.price = Money(price)
+
+        else:
+            raise ValueError("Price must be a Money object or a number.")
 
     def is_buy_order(self):
         return self.buy_order

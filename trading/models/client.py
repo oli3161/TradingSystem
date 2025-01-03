@@ -1,6 +1,6 @@
 from .portfolio import Portfolio
 from .order import Order
-from .stock_exchange import StockExchange
+from .Exchange.stock_exchange import StockExchange
 
 
 class Client:

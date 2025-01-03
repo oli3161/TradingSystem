@@ -3,17 +3,17 @@ import pytest
 import time
 
 # Create mock clients and assets for testing
-client1_assets = Assets(PortfolioStock("AAPL", 50, 150.00, 160.00), 5000)
-client2_assets = Assets(PortfolioStock("AAPL", 30, 140.00, 160.00), 3000)
+client1_assets = Assets(PortfolioStock("AAPL", 50, 150.00, 160.00), Money(5000))
+client2_assets = Assets(PortfolioStock("AAPL", 30, 140.00, 160.00), Money(3000))
 
 client1 = "Client1"
 client2 = "Client2"
 
 # Create Limit and Market Orders
-buy_limit_order = LimitOrder("AAPL", price=155.00, quantity=10, client=client1, buy_order=True, assets=client1_assets)
-sell_limit_order = LimitOrder("AAPL", price=150.00, quantity=5, client=client2, buy_order=False, assets=client2_assets)
-buy_market_order = MarketOrder("AAPL", price=150.01, quantity=8, client=client1, buy_order=True, assets=client1_assets)
-sell_market_order = MarketOrder("AAPL", price=155.01, quantity=6, client=client2, buy_order=False, assets=client2_assets)
+buy_limit_order = LimitOrder("AAPL", price=Money(155.00), quantity=10, client=client1, buy_order=True, assets=client1_assets)
+sell_limit_order = LimitOrder("AAPL", price=Money(150.00), quantity=5, client=client2, buy_order=False, assets=client2_assets)
+buy_market_order = MarketOrder("AAPL", price=Money(150.01), quantity=8, client=client1, buy_order=True, assets=client1_assets)
+sell_market_order = MarketOrder("AAPL", price=Money(155.01), quantity=6, client=client2, buy_order=False, assets=client2_assets)
 
 @pytest.fixture
 def min_heap_queue():

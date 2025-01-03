@@ -46,7 +46,10 @@ class Money:
         return Money(result, self.currency, self.precision)
 
     def __eq__(self, other):
-        return self.amount == other.amount and self.currency == other.currency
+        if isinstance(other,Money):
+            return self.amount == other.amount and self.currency == other.currency
+        else:
+            return float(self.amount) == float(other)
 
     def __lt__(self, other):
         if self.currency != other.currency:
