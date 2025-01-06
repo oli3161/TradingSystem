@@ -40,7 +40,4 @@ class OrderEngine(ABC):
         """
         pass
 
-    @abstractmethod
-    def complete_transaction(self,sell_order : Order,buy_order : Order,price):
-        """ """
-        pass
+    

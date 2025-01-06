@@ -2,6 +2,7 @@ from typing import Dict
 from ..Assets.stock_market_listing import Asset
 from ..MarketMaker.dynamic_market_maker import DynamicMarketMaker,DynamictMarketMakerFactory
 from ..OrderEngine.order_matching_engine import SimulatedOrderMatchingEngine,SimulatedOrderMatchingEngineFactory
+from ..OrderEngine.live_matching import LiveMatching,LiveMatchingFactory
 from ..order import Order
 from ..constants import MODE_LIVE, MODE_SIMULATION
 from ..money import Money
@@ -47,17 +48,19 @@ class StockExchange:
         if mode == MODE_SIMULATION:
             self.market_maker_factory = DynamictMarketMakerFactory()
             self.order_matching_engine_factory = SimulatedOrderMatchingEngineFactory()
-            self.mode = mode
 
         elif mode == MODE_LIVE:
-            print("Live mode not supported yet")
+            self.market_maker_factory = DynamictMarketMakerFactory()
+            self.order_matching_engine_factory = LiveMatchingFactory()
 
         else:
             print("Invalid mode, please enter either 'Simulation' or 'Live'")
 
+        self.mode = mode
+
     
-    def getMarketMaker(self,ticker_symbol) -> DynamicMarketMaker:
-        return self.stock_marketMakers.get(ticker_symbol,'Key not found')
+    def getMarketMaker(self, ticker_symbol) -> DynamicMarketMaker:
+        return self.stock_marketMakers.get(ticker_symbol, None)
     
-    def getStockMarketListing(self,ticker_symbol) -> Asset:
-        return self.asset.get(ticker_symbol,'Key not found')
+    def getStockMarketListing(self, ticker_symbol) -> Asset:
+        return self.asset.get(ticker_symbol, None)

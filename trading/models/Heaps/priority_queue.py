@@ -82,15 +82,11 @@ class PriorityQueue(ExecutionQueue):
         if queue_top and not heap_top:
             return queue_top
 
-        # Compare prices
-        if heap_top.price.amount != queue_top.price.amount:
-            if self.is_min_heap:
-                return heap_top if heap_top.price < queue_top.price else queue_top
-            else:
-                return heap_top if heap_top.price > queue_top.price else queue_top
-
-        # If prices are the same, compare order_date (FIFO for queue)
-        return heap_top if heap_top.order_date <= queue_top.order_date else queue_top
+        # Return the most recent order
+        if heap_top.order_date <= queue_top.order_date:
+            return heap_top
+        else:
+            return queue_top
     
     #Returns a dictionary of the price levels in the format : {price: quantity}
     def get_order_book(self) -> dict:
