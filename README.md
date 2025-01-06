@@ -31,6 +31,14 @@ python -m trading.main
 cd path/to/TradingSystem
 pytest
 ```
+To test using vscode Debugger and pytests 
+Example test file tests\test_live_order_matching.py
+```bash
+cd path/to/TradingSystem
+py.test --vscodedebug .\trading\tests\test_live_order_matching.py
+```
+
+
 
 TradingSystem/
 ├── trading/

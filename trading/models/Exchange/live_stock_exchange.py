@@ -43,7 +43,10 @@ class LiveStockExchange(StockExchangeDecorator):
         for ticker,price in prices.items():
             price = Money(price)
             asset = self.stock_exchange.getStockMarketListing(ticker)
-            if asset is None:
+
+            if price == -1:
+                continue
+            elif asset is None:
                 self.stock_exchange.addStockMarketListing(ticker, ticker, price)
             else :
                 asset.last_price = price
