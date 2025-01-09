@@ -1,20 +1,37 @@
-import asyncio
-
-from models import Assets, Client, PortfolioStock, StockExchange
-from websocket_server import WebSocketServer
+import time
+from trading.models import *
 
 
-async def main():
-    exchange = StockExchange("NYSE")
-    exchange.addStockMarketListing("AAPL", "Apple Inc.", 155.00)
 
-    client_assets = Assets(PortfolioStock("AAPL", 50), 5000)
-    client = Client(1)
-
-    server = WebSocketServer(exchange, client, client_assets)
-
-    await server.serve_forever()
+exchange = StockExchange('NYSE')
+exchange.addStockMarketListing("AAPL", "Apple Inc.", Money(150.00))
 
 
-if __name__ == "__main__":
-    asyncio.run(main())
+
+# Create OrderFlow instances
+order_flow1 = OrderFlow(1)
+order_flow2 = OrderFlow(2)
+
+
+# Function to simulate stock market ticks
+def simulate_market_ticks(stock_exchange : StockExchange, order_flow1 : OrderFlow, order_flow2 : OrderFlow, duration):
+    start_time = time.time()
+    while time.time() - start_time < duration:        
+        
+        # Randomize and submit orders
+        order_flow1.submit_random_orders(stock_exchange, 10, 140.00, 160.00, "AAPL")
+        order_flow2.submit_random_orders(stock_exchange, 10, 140.00, 160.00, "AAPL")
+        
+        
+        # Match orders and print transactions
+        engine = stock_exchange.getMarketMaker("AAPL").ordermatching_engine
+        engine.match_orders()
+        stock_exchange.getStockMarketListing("AAPL").visualize_ticker()
+
+        # Wait for 1 second before the next tick
+        time.sleep(1)
+
+
+
+# Simulate market for 60 seconds
+simulate_market_ticks(exchange, order_flow1, order_flow2, 300)

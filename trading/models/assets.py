@@ -1,13 +1,13 @@
 from .portfolio_stock import PortfolioStock
-
+from .money import Money
 
 class Assets:
 
 
-    def __init__(self , portfolio_stock : PortfolioStock = PortfolioStock(), money_amount = 0):
+    def __init__(self , portfolio_stock : PortfolioStock = PortfolioStock(), money = Money(0)):
         
         self.portfolio_stock : PortfolioStock = portfolio_stock
-        self.money_amount = money_amount
+        self.money : Money = money
 
     def add_stock(self, portfolio_stock : PortfolioStock):
         self.portfolio_stock = portfolio_stock
@@ -22,14 +22,18 @@ class Assets:
 
         return shares
 
-    def add_money(self, amount):
-        self.money_amount += amount
+    def add_money(self, amount: Money):
+        if self.money.currency != amount.currency:
+            raise ValueError("Currency mismatch.")
+        self.money += amount
 
-    def remove_money(self, amount):
-        if self.money_amount < amount:
+    def remove_money(self, amount: Money):
+        if self.money.currency != amount.currency:
+            raise ValueError("Currency mismatch.")
+        if self.money < amount:
             raise ValueError("Not enough money in the account")
-        self.money_amount -= amount
+        self.money -= amount
         return amount
-    
+
     def __str__(self):
-        return (f"Assets(portfolio_stock={self.portfolio_stock}, money_amount={self.money_amount})")
+        return (f"Assets(portfolio_stock={self.portfolio_stock}, money={self.money})")
